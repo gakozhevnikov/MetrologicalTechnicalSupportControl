@@ -74,6 +74,8 @@ public class WorkPlanFileToDataBase {
                 log.info("getTechObjects Exception {}", e.toString());
                 e.printStackTrace();
             }
+        }else {
+            log.info(FileManager.getWorkPlanFile()+" file not exist");
         }
 
     }

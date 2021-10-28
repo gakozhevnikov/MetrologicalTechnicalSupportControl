@@ -1,5 +1,7 @@
 package com.kga.metrologicaltechnicalsupportcontrol.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
@@ -13,6 +15,7 @@ import java.nio.file.Paths;
 
 @Component
 public class FileManager {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private static String DIRECTORY_PATH ="src/main/resources/storage";//refactor - автоматическое заполнение в зависимости от папки ресурсов
     private static String PATH_WORK_PLAN_FILE="src/main/resources/storage/graph2021.xls";
 
