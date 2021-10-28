@@ -9,9 +9,9 @@ public class UserDTO {
 
     private Long id;
     @NotEmpty
-    private String firstname;
+    private String name;
     @NotEmpty
     private String lastname;
-    private String username;
+    private String userName;
 
 }

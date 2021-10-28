@@ -50,7 +50,7 @@ public class UserService {
 
     public User updateUser(UserDTO userDTO, Principal principal) {
         User user = getUserByPrincipal(principal);
-        user.setName(userDTO.getFirstname());
+        user.setName(userDTO.getName());
         user.setLastName(userDTO.getLastname());
         return userRepository.save(user);
     }
