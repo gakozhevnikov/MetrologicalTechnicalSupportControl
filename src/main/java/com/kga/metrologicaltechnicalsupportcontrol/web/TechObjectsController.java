@@ -21,6 +21,16 @@ public class TechObjectsController {
     @GetMapping("/")
     ResponseEntity<List<TechObject>> getAllTechObject(){
         List<TechObject> allTechObjectList = techObjectService.findAll();
+        if(allTechObjectList.isEmpty()){
+            techObjectService.saveAllAndFlushFromFile();
+            allTechObjectList = techObjectService.findAll();
+            if (allTechObjectList.isEmpty()){
+                TechObject techObjectWithErrorMessage = new TechObject();
+                techObjectWithErrorMessage.setTitle("Error dataBase, or error of file with work-plan, or undefine error");
+                allTechObjectList.add(new TechObject());
+                return new ResponseEntity<>(allTechObjectList, HttpStatus.NO_CONTENT);
+            }
+        }
         return new ResponseEntity<>(allTechObjectList, HttpStatus.OK);
     }
 
