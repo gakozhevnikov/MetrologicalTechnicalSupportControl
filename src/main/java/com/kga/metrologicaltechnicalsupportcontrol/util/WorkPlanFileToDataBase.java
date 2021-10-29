@@ -45,8 +45,8 @@ public class WorkPlanFileToDataBase {
     private Integer columnTitleEquipment;
 
     public WorkPlanFileToDataBase() {
-        this.getTechObjects();
-
+        //this.setTechObjectsFromFile();//вызов этого метода в конструкторе не работает
+        //log.info("Class {} in constructor after setTechObjectsFromFile content of Set<TechObject> techObjects {}", getClass().getName(), techObjects);
     }
 
     public void setTechObjectsFromFile() {
@@ -78,6 +78,12 @@ public class WorkPlanFileToDataBase {
             log.info(FileManager.getWorkPlanFile()+" file not exist");
         }
 
+    }
+
+
+    public Set<TechObject> getTechObjects(){
+        this.setTechObjectsFromFile();
+        return this.techObjects;
     }
 }
 

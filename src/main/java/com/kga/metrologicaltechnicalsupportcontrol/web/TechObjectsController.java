@@ -22,6 +22,7 @@ public class TechObjectsController {
     ResponseEntity<List<TechObject>> getAllTechObject(){
         List<TechObject> allTechObjectList = techObjectService.findAll();
         if(allTechObjectList.isEmpty()){
+
             techObjectService.saveAllAndFlushFromFile();
             allTechObjectList = techObjectService.findAll();
             if (allTechObjectList.isEmpty()){
