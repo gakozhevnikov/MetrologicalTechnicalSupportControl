@@ -1,5 +1,7 @@
 package com.kga.metrologicaltechnicalsupportcontrol.web;
 
+import com.kga.metrologicaltechnicalsupportcontrol.dto.TechObjectDTO;
+import com.kga.metrologicaltechnicalsupportcontrol.facade.TechObjectFacade;
 import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
 import com.kga.metrologicaltechnicalsupportcontrol.services.impl.TechObjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tech_objects")
@@ -17,23 +20,30 @@ public class TechObjectsController {
 
     @Autowired
     private TechObjectServiceImpl techObjectService;
+    @Autowired
+    private TechObjectFacade techObjectFacade;
 
     @GetMapping("/")
-    ResponseEntity<List<TechObject>> getAllTechObject(){
-        List<TechObject> allTechObjectList = techObjectService.findAll();
+    ResponseEntity<List<TechObjectDTO>> getAllTechObject(){
+        List<TechObjectDTO> allTechObjectList = makeListTechObjectsDTO();
         if(allTechObjectList.isEmpty()){
-
             techObjectService.saveAllAndFlushFromFile();
-            allTechObjectList = techObjectService.findAll();
+            allTechObjectList = makeListTechObjectsDTO();
             if (allTechObjectList.isEmpty()){
-                TechObject techObjectWithErrorMessage = new TechObject();
-                techObjectWithErrorMessage.setTitle("Error dataBase, or error of file with work-plan, or undefine error");
-                allTechObjectList.add(new TechObject());
+                TechObjectDTO techObjectDTOWithErrorMessage = new TechObjectDTO();
+                techObjectDTOWithErrorMessage.setTitle("Error dataBase, or error of file with work-plan, or undefine error");
+                allTechObjectList.add(techObjectDTOWithErrorMessage);
                 return new ResponseEntity<>(allTechObjectList, HttpStatus.NO_CONTENT);
             }
         }
         return new ResponseEntity<>(allTechObjectList, HttpStatus.OK);
     }
 
+    private List<TechObjectDTO> makeListTechObjectsDTO(){
+        return techObjectService.findAll()
+                .stream()
+                .map(techObjectFacade::techObjectTotechObjectDTO)
+                .collect(Collectors.toList());
+    }
 
 }
