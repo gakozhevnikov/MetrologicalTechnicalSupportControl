@@ -112,7 +112,7 @@ public class WorkPlanFileToDataBase {
 
     public Set<TechObject> getTechObjects(){
         this.setTechObjectsFromFile();
-        return this.tethe refactor made the receipt of the sheet in a separate methodchObjects;
+        return this.techObjects;
     }
 
     public void setEquipmentsFromFile(){
