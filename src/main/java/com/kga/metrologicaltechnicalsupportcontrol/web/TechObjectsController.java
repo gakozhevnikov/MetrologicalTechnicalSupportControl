@@ -2,7 +2,6 @@ package com.kga.metrologicaltechnicalsupportcontrol.web;
 
 import com.kga.metrologicaltechnicalsupportcontrol.dto.TechObjectDTO;
 import com.kga.metrologicaltechnicalsupportcontrol.facade.TechObjectFacade;
-import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
 import com.kga.metrologicaltechnicalsupportcontrol.services.impl.TechObjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +43,7 @@ public class TechObjectsController {
     private List<TechObjectDTO> makeListTechObjectsDTO(){
         return techObjectService.findAll()
                 .stream()
-                .map(techObjectFacade::techObjectTotechObjectDTO)
+                .map(techObjectFacade::techObjectToTechObjectDTO)
                 .collect(Collectors.toList());
     }
 
