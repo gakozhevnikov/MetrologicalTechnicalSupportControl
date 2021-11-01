@@ -34,9 +34,9 @@ public class Equipment implements HasId, Comparable<Equipment> {
     @ManyToOne(fetch = FetchType.LAZY)
     private WorkPlan workPlan;*/
 
-    /**Заводской, серийный, присвоенный т.д. индивидуальный номер*/
+    /**Заводской, серийный, присвоенный т.д. индивидуальный номер*//*
     @Column
-    private String serialNumber;
+    private String serialNumber;*/
 
     /**Объект, установка, помещение на котором установлено оборудование*/
     @ManyToOne(fetch = FetchType.EAGER)
