@@ -34,6 +34,9 @@ class WorkPlanFileToDataBaseTest {
     @Value("${work-plan-file.end-row}")
     private Integer endRowTest;
 
+    @Value("#{${work-plan-file.sheet}-1}")
+    private Integer sheet;
+
     @Test
     void countTitleEquipmentTestValueIsEquals(){
         log.info("workPlanFileToDataBase.getCountTitleEquipment: {} and countTitleEquipmentTest: {}", workPlanFileToDataBase.getCountTitleEquipment(),countTitleEquipmentTest);
@@ -62,6 +65,12 @@ class WorkPlanFileToDataBaseTest {
     void endRowValueIsEquals(){
         log.info("workPlanFileToDataBase.getEndRow: {} and endRowTest: {}", workPlanFileToDataBase.getEndRow(),endRowTest);
         assertThat(workPlanFileToDataBase.getEndRow(), is(endRowTest));
+    }
+
+    @Test
+    void numberSheetIsEquals(){
+        log.info("workPlanFileToDataBase.getSheet: {} and endRowTest: {}", workPlanFileToDataBase.getSheet(),sheet);
+        assertThat(workPlanFileToDataBase.getSheet(), is(sheet));
     }
 
     @Test
