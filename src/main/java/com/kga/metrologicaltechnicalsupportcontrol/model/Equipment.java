@@ -18,7 +18,7 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 @Entity
-public class Equipment implements HasId {
+public class Equipment implements HasId, Comparable<Equipment> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -50,4 +50,8 @@ public class Equipment implements HasId {
     private List<MaintenanceOperations> maintenanceOperations;
 
 
+    @Override
+    public int compareTo(Equipment equipment) {
+        return this.title.compareTo(equipment.title);
+    }
 }
