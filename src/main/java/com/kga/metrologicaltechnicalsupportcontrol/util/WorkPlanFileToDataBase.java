@@ -1,6 +1,7 @@
 package com.kga.metrologicaltechnicalsupportcontrol.util;
 
 
+import com.kga.metrologicaltechnicalsupportcontrol.exceptions.WorkPlanFileToDataBaseException;
 import com.kga.metrologicaltechnicalsupportcontrol.model.Equipment;
 import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
 import lombok.Data;
@@ -51,12 +52,16 @@ public class WorkPlanFileToDataBase {
     @Value("#{${work-plan-file.sheet}-1}")//В настройках и файле отчет колонки идет от 1, но при программной обработке файла отчет идет от нуля
     private Integer sheet;
 
+    @Value("${work-plan-file.count-tech-object}" )
+    private String errorCountTechObject;
+
     public WorkPlanFileToDataBase() {
         //this.setTechObjectsFromFile();//вызов этого метода в конструкторе не работает
         //log.info("Class {} in constructor after setTechObjectsFromFile content of Set<TechObject> techObjects {}", getClass().getName(), techObjects);
     }
 
     public void setTechObjectsFromFile() {
+        Set<TechObject> techObjectsTmp = new TreeSet<>();
         try {
             Sheet sheet =getSheetFromFile();
             if (null != sheet){
@@ -72,12 +77,18 @@ public class WorkPlanFileToDataBase {
                         Cell cellObjectTitle = row.getCell(1);
                         TechObject techObject = new TechObject();
                         techObject.setTitle(cellObjectTitle.getStringCellValue().toString());
-                        techObjects.add(techObject);
+                        techObjectsTmp.add(techObject);
                     }
                 }
             }
         } catch (IOException e) {
-            log.info("getTechObjects Exception {}", e.toString());
+            log.info("Class {}, getTechObjects Exception {}", getClass().getName(),e.toString());
+        }
+        if(techObjectsTmp.size()==countTechObject){
+            techObjects=techObjectsTmp;
+        }else{
+
+            throw new WorkPlanFileToDataBaseException(errorCountTechObject);
         }
 
         /*if (null != FileManager.getWorkPlanFile()) {
@@ -116,7 +127,12 @@ public class WorkPlanFileToDataBase {
     }
 
     public void setEquipmentsFromFile(){
+        try {
+            Sheet sheet =getSheetFromFile();
 
+        } catch (IOException e) {
+            log.info("Class {}, setEquipmentsFromFile Exception {}", getClass().getName(),e.toString());
+        }
     }
 
     private Sheet getSheetFromFile() throws IOException {
