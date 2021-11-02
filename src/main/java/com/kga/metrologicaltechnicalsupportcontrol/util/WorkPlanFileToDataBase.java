@@ -1,6 +1,8 @@
 package com.kga.metrologicaltechnicalsupportcontrol.util;
 
 
+import com.kga.metrologicaltechnicalsupportcontrol.exceptions.ErrorInfo;
+import com.kga.metrologicaltechnicalsupportcontrol.exceptions.ErrorType;
 import com.kga.metrologicaltechnicalsupportcontrol.exceptions.WorkPlanFileToDataBaseException;
 import com.kga.metrologicaltechnicalsupportcontrol.model.Equipment;
 import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
@@ -17,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -40,9 +44,6 @@ public class WorkPlanFileToDataBase {
     @Value("${work-plan-file.end-row}")
     private Integer endRow;
 
-    Set<TechObject> techObjects = new TreeSet<>();//Сортированное без повторений множество, такое множество необходимо для чтобы не было повторений, т.е. только уникальные значения и сортировка для удобства поиска
-    Set<Equipment> equipmentSet = new TreeSet<>();
-
     //@Value("${work-plan-file.column-title-equipment}")
     @Value("#{${work-plan-file.column-title-equipment}-1}")
     //В настройках и файле отчет колонки идет от 1, но при программной обработке файла отчет идет от нуля
@@ -52,8 +53,15 @@ public class WorkPlanFileToDataBase {
     @Value("#{${work-plan-file.sheet}-1}")//В настройках и файле отчет колонки идет от 1, но при программной обработке файла отчет идет от нуля
     private Integer sheet;
 
-    @Value("${work-plan-file.count-tech-object}" )
+    @Value("${work-plan-file.message.error.count-tech-object}" )
     private String errorCountTechObject;
+
+    Set<TechObject> techObjects = new TreeSet<>();//Сортированное без повторений множество, такое множество необходимо для чтобы не было повторений, т.е. только уникальные значения и сортировка для удобства поиска
+    Set<Equipment> equipmentSet = new TreeSet<>();
+
+    boolean hasError = false;
+
+    List<String> errorList = new ArrayList<>();
 
     public WorkPlanFileToDataBase() {
         //this.setTechObjectsFromFile();//вызов этого метода в конструкторе не работает
@@ -87,8 +95,8 @@ public class WorkPlanFileToDataBase {
         if(techObjectsTmp.size()==countTechObject){
             techObjects=techObjectsTmp;
         }else{
-
-            throw new WorkPlanFileToDataBaseException(errorCountTechObject);
+            errorList.add(errorCountTechObject +techObjectsTmp);
+            hasError=true;
         }
 
         /*if (null != FileManager.getWorkPlanFile()) {
@@ -120,10 +128,13 @@ public class WorkPlanFileToDataBase {
         }*/
     }
 
-
     public Set<TechObject> getTechObjects(){
         this.setTechObjectsFromFile();
-        return this.techObjects;
+        if (!hasError()){
+            return this.techObjects;
+        } else {
+            throw new WorkPlanFileToDataBaseException(errorList);
+        }
     }
 
     public void setEquipmentsFromFile(){
@@ -146,6 +157,10 @@ public class WorkPlanFileToDataBase {
             log.info(FileManager.getWorkPlanFile()+" file not exist");
         }
         return sheet;
+    }
+
+    public boolean hasError(){
+        return hasError && errorList.size() == 0;
     }
 }
 

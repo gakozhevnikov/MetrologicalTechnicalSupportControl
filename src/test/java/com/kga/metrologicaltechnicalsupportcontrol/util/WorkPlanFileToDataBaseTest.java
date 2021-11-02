@@ -85,8 +85,6 @@ class WorkPlanFileToDataBaseTest {
         });
         log.info("Set of techObjectTest: {}, set of techObject from workPlanFileToDataBase: {}",  techObjectSet, techObjectSetFromWorkPlanFileToDataBase);
         assertThat(techObjectSetFromWorkPlanFileToDataBase, is(techObjectSet));
-
-
 }
 
 
