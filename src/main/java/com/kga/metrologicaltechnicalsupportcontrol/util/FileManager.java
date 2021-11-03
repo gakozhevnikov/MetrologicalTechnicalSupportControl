@@ -22,12 +22,8 @@ public class FileManager {
     public void upload(byte[] resource, String keyName) throws IOException {
         Path path = Paths.get(DIRECTORY_PATH, keyName);
         Path file = Files.createFile(path);
-        FileOutputStream stream = null;
-        try {
-            stream = new FileOutputStream(file.toString());
+        try (FileOutputStream stream = new FileOutputStream(file.toString())) {
             stream.write(resource);
-        } finally {
-            stream.close();
         }
     }
 
@@ -52,6 +48,10 @@ public class FileManager {
             return file;
         }
         return null;
+    }
+
+    public void setPathWorkPlanFile(String pathWorkPlanFile){
+        FileManager.PATH_WORK_PLAN_FILE=pathWorkPlanFile;
     }
 
 }
