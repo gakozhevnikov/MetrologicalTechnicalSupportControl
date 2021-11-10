@@ -50,8 +50,4 @@ public class FileManager {
         return null;
     }
 
-    public void setPathWorkPlanFile(String pathWorkPlanFile){
-        FileManager.PATH_WORK_PLAN_FILE=pathWorkPlanFile;
-    }
-
 }
