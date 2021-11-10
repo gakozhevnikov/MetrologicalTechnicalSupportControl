@@ -2,6 +2,7 @@ package com.kga.metrologicaltechnicalsupportcontrol.model;
 
 
 import com.kga.metrologicaltechnicalsupportcontrol.HasId;
+import com.kga.metrologicaltechnicalsupportcontrol.Title;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,7 @@ import java.util.List;
 @Setter
 @Data
 @Entity
-public class TechObject implements Comparable<TechObject>, HasId {
+public class TechObject implements Comparable<TechObject>, HasId, Title {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,4 +36,8 @@ public class TechObject implements Comparable<TechObject>, HasId {
     }
 
 
+    @Override
+    public void setTitle(String title) {
+        this.title=title;
+    }
 }
