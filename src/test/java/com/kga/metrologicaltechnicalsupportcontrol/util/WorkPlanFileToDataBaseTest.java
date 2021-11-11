@@ -2,7 +2,6 @@ package com.kga.metrologicaltechnicalsupportcontrol.util;
 
 import com.kga.metrologicaltechnicalsupportcontrol.exceptions.WorkPlanFileToDataBaseException;
 import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
-import org.apache.tomcat.jni.File;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
