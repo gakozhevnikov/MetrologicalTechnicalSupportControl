@@ -1,6 +1,8 @@
 package com.kga.metrologicaltechnicalsupportcontrol.util;
 
+import com.kga.metrologicaltechnicalsupportcontrol.exceptions.WorkPlanFileToDataBaseException;
 import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
+import org.apache.tomcat.jni.File;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import java.util.TreeSet;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class WorkPlanFileToDataBaseTest {
@@ -36,6 +39,8 @@ class WorkPlanFileToDataBaseTest {
 
     @Value("#{${work-plan-file.sheet}-1}")
     private Integer sheet;
+
+
 
     @Test
     void countTitleEquipmentTestValueIsEquals(){
@@ -85,8 +90,18 @@ class WorkPlanFileToDataBaseTest {
         });
         log.info("Set of techObjectTest: {}, set of techObject from workPlanFileToDataBase: {}",  techObjectSet, techObjectSetFromWorkPlanFileToDataBase);
         assertThat(techObjectSetFromWorkPlanFileToDataBase, is(techObjectSet));
-}
+    }
 
+    @Test
+    void getTechObjectWithErrorCountTechObject() {
+        workPlanFileToDataBase.setCountTechObject(3);
+        log.info("Class {}, getTechObjectWithErrorCountTechObject,count Tech Objects after correct: {}", getClass().getName(), workPlanFileToDataBase.getCountTechObject());
+        Exception exception = assertThrows(WorkPlanFileToDataBaseException.class, () -> workPlanFileToDataBase.getTechObjects());
+        log.info("Class {}, getTechObjectWithErrorCountTechObject, exception message: {}", getClass().getName(), exception.getMessage());
+        log.info("Class {}, getTechObjectWithErrorCountTechObject, workPlanFileToDataBase.getErrorList(): {}", getClass().getName(), workPlanFileToDataBase.getErrorList());
+        workPlanFileToDataBase.setCountTechObject(countTechObjectTest);
+        log.info("Class {}, getTechObjectWithErrorCountTechObject, count Tech Objects after set origin: {}", getClass().getName(), workPlanFileToDataBase.getCountTechObject());
+    }
 
 
 

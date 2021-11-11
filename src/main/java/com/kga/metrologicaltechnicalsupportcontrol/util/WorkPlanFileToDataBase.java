@@ -1,6 +1,7 @@
 package com.kga.metrologicaltechnicalsupportcontrol.util;
 
 
+import com.kga.metrologicaltechnicalsupportcontrol.Title;
 import com.kga.metrologicaltechnicalsupportcontrol.exceptions.ErrorInfo;
 import com.kga.metrologicaltechnicalsupportcontrol.exceptions.ErrorType;
 import com.kga.metrologicaltechnicalsupportcontrol.exceptions.WorkPlanFileToDataBaseException;
@@ -95,7 +96,7 @@ public class WorkPlanFileToDataBase {
         if(techObjectsTmp.size()==countTechObject){
             techObjects=techObjectsTmp;
         }else{
-            errorList.add(errorCountTechObject +techObjectsTmp);
+            errorList.add(makesStringOfErrorMessageAndModelTitle(techObjectsTmp, errorCountTechObject));
             hasError=true;
         }
 
@@ -140,7 +141,6 @@ public class WorkPlanFileToDataBase {
     public void setEquipmentsFromFile(){
         try {
             Sheet sheet =getSheetFromFile();
-
         } catch (IOException e) {
             log.info("Class {}, setEquipmentsFromFile Exception {}", getClass().getName(),e.toString());
         }
@@ -160,7 +160,28 @@ public class WorkPlanFileToDataBase {
     }
 
     public boolean hasError(){
-        return hasError && errorList.size() == 0;
+        return hasError && errorList.size() != 0;
+    }
+
+    public void setCountTechObject(Integer countTechObject){
+        this.countTechObject = countTechObject;
+    }
+
+    private String makesStringOfErrorMessageAndModelTitle(Set<? extends Title> model, String errorMessage){
+        String[] title = new String[model.size()];
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(errorMessage);
+        int a = 0;
+        for (Title titleModel : model){
+            title[a++]=titleModel.getTitle();
+        }
+        for(int b =0; b<title.length; b++){
+            stringBuilder.append(title[b]);
+            if (b<title.length-1){
+                stringBuilder.append(", ");
+            }
+        }
+         return stringBuilder.toString();
     }
 }
 
