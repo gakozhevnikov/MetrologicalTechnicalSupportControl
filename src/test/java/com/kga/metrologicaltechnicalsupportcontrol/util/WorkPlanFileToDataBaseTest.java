@@ -52,6 +52,16 @@ class WorkPlanFileToDataBaseTest {
         log.info("workPlanFileToDataBase.getColumnTitleEquipment: {}", workPlanFileToDataBase.getColumnTitleEquipment());
         assertThat(workPlanFileToDataBase.getColumnTitleEquipment(), is(0));
     }
+    @Test
+    void columnTextObjectShouldZero(){
+        log.info("workPlanFileToDataBase.getColumnTitleEquipment: {}", workPlanFileToDataBase.getColumnTextObject());
+        assertThat(workPlanFileToDataBase.getColumnTextObject(), is(0));
+    }
+    @Test
+    void columnTitleObjectShouldOne(){
+        log.info("workPlanFileToDataBase.getColumnTitleEquipment: {}", workPlanFileToDataBase.getColumnTitleObject());
+        assertThat(workPlanFileToDataBase.getColumnTitleObject(), is(1));
+    }
 
     @Test
     void countTechObjectValueIsEquals(){

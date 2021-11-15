@@ -47,6 +47,10 @@ public class WorkPlanFileToDataBase {
     //В настройках и файле отчет колонки идет от 1, но при программной обработке файла отчет идет от нуля
     //@Value("#{T(java.lang.Math).decrementExact('${work-plan-file.column-title-equipment}')}")//Второй вариант уменьшения значения из настроек на одну единицу
     private Integer columnTitleEquipment;
+    @Value("#{${work-plan-file.column-text-object}-1}")
+    private Integer columnTextObject;
+    @Value("#{${work-plan-file.column-title-object}-1}")
+    private Integer columnTitleObject;
 
     @Value("#{${work-plan-file.sheet}-1}")//В настройках и файле отчет колонки идет от 1, но при программной обработке файла отчет идет от нуля
     private Integer sheet;
@@ -79,12 +83,12 @@ public class WorkPlanFileToDataBase {
                     //читаем первое поле (отсчет полей идет с нуля) т.е. по сути читаем второе - cell с 0, а Row с 1
                     Row row = sheet.getRow(rowInt);
                     //читаем столбцы, отчет с нуля
-                    Cell cell = row.getCell(0);//рефактор брать данное значение из настроек
+                    Cell cell = row.getCell(columnTextObject);
                     //Для Cell getStringCellValue().toString() именно .toString() обязательно т.к. если его убрать то будут возникать ошибки, к примеру при отсутствии в ячейки значения и без приведения к стринг значение будет восприниматься как null  и вызывать ошибку
                     if (cell.getStringCellValue().toString().equals("")) {//Убираем разные не нужные вспомогательные слова которые попадаются по ходу чтения из файла
                         continue;
                     } else if (cell.getStringCellValue().toString().equals("Объект:")) {
-                        Cell cellObjectTitle = row.getCell(1);//рефактор брать данное значение из настроек
+                        Cell cellObjectTitle = row.getCell(columnTitleObject);
                         TechObject techObject = new TechObject();
                         techObject.setTitle(cellObjectTitle.getStringCellValue().toString());
                         techObjectsTmp.add(techObject);
