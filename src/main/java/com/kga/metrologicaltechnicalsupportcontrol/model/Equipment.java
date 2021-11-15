@@ -2,6 +2,7 @@ package com.kga.metrologicaltechnicalsupportcontrol.model;
 
 
 import com.kga.metrologicaltechnicalsupportcontrol.HasId;
+import com.kga.metrologicaltechnicalsupportcontrol.Title;
 import com.kga.metrologicaltechnicalsupportcontrol.model.documents.TypeApproval;
 import com.kga.metrologicaltechnicalsupportcontrol.model.maintenance.MaintenanceOperations;
 import lombok.EqualsAndHashCode;
@@ -18,7 +19,7 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 @Entity
-public class Equipment implements HasId, Comparable<Equipment> {
+public class Equipment implements HasId, Comparable<Equipment>, Title {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
