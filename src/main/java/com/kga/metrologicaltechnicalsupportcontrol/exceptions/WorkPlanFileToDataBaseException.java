@@ -13,4 +13,9 @@ public class WorkPlanFileToDataBaseException extends RuntimeException{
     public WorkPlanFileToDataBaseException(List<String> errorInfo){
         this.errorInfo = errorInfo;
     }
+
+    @Override
+    public String getMessage() {
+        return errorInfo.toString();
+    }
 }
