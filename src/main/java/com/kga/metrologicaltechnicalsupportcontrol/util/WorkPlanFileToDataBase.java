@@ -62,8 +62,8 @@ public class WorkPlanFileToDataBase {
     @Value("${work-plan-file.message.error.sheet.null}" )
     private String errorSheetNull;
 
-    Set<TechObject> techObjects = new TreeSet<>();//Сортированное без повторений множество, такое множество необходимо для чтобы не было повторений, т.е. только уникальные значения и сортировка для удобства поиска
-    Set<Equipment> equipmentSet = new TreeSet<>();
+    private Set<TechObject> techObjects = new TreeSet<>();//Сортированное без повторений множество, такое множество необходимо для чтобы не было повторений, т.е. только уникальные значения и сортировка для удобства поиска
+    private Set<Equipment> equipmentSet = new TreeSet<>();
 
     boolean hasError = false;
 
