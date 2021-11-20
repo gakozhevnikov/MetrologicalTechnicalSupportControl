@@ -43,7 +43,10 @@ class WorkPlanFileToDataBaseTest {
     private String errorCountTechObjectTest;
 
     @Value("${work-plan-file.message.error.count-equipment}")
-    private String errorCountEquipment;
+    private String errorCountEquipmentTest;
+
+    @Value("${work-plan-file.message.error.sheet.null}")
+    private String errorSheetNullTest;
 
 
 
@@ -101,9 +104,16 @@ class WorkPlanFileToDataBaseTest {
 
     @Test
     void errorCountEquipmentShouldEqualValueInFileProperties(){
-        log.info("workPlanFileToDataBase.errorCountEquipmentShouldEqualValueInFileProperties: {} and errorCountEquipment: {}",
-                workPlanFileToDataBase.getErrorCountEquipment(), errorCountEquipment);
-        assertThat(workPlanFileToDataBase.getErrorCountEquipment(), is(errorCountEquipment));
+        log.info("workPlanFileToDataBase.errorCountEquipmentShouldEqualValueInFileProperties: {} and errorCountEquipmentTest: {}",
+                workPlanFileToDataBase.getErrorCountEquipment(), errorCountEquipmentTest);
+        assertThat(workPlanFileToDataBase.getErrorCountEquipment(), is(errorCountEquipmentTest));
+    }
+
+    @Test
+    void errorSheetNullTestShouldEqualValueInFileProperties(){
+        log.info("workPlanFileToDataBase.errorSheetNullTestShouldEqualValueInFileProperties: {} and errorSheetNullTest: {}",
+                workPlanFileToDataBase.getErrorSheetNull(), errorSheetNullTest);
+        assertThat(workPlanFileToDataBase.getErrorSheetNull(), is(errorSheetNullTest));
     }
 
 
