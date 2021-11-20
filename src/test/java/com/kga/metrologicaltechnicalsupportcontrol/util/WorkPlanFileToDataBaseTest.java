@@ -42,6 +42,9 @@ class WorkPlanFileToDataBaseTest {
     @Value("${work-plan-file.message.error.count-tech-object}")
     private String errorCountTechObjectTest;
 
+    @Value("${work-plan-file.message.error.count-equipment}")
+    private String errorCountEquipment;
+
 
 
     @Test
@@ -92,8 +95,15 @@ class WorkPlanFileToDataBaseTest {
 
     @Test
     void errorCountTechObjectShouldEqualValueInFileProperties(){
-        log.info("workPlanFileToDataBase.errorCountTechObjectShouldEqualValueInFileProperties: {} and endRowTest: {}", workPlanFileToDataBase.getErrorCountTechObject(), errorCountTechObjectTest);
+        log.info("workPlanFileToDataBase.errorCountTechObjectShouldEqualValueInFileProperties: {} and errorCountTechObjectTest: {}", workPlanFileToDataBase.getErrorCountTechObject(), errorCountTechObjectTest);
         assertThat(workPlanFileToDataBase.getErrorCountTechObject(), is(errorCountTechObjectTest));
+    }
+
+    @Test
+    void errorCountEquipmentShouldEqualValueInFileProperties(){
+        log.info("workPlanFileToDataBase.errorCountEquipmentShouldEqualValueInFileProperties: {} and errorCountEquipment: {}",
+                workPlanFileToDataBase.getErrorCountEquipment(), errorCountEquipment);
+        assertThat(workPlanFileToDataBase.getErrorCountEquipment(), is(errorCountEquipment));
     }
 
 
