@@ -1,6 +1,7 @@
 package com.kga.metrologicaltechnicalsupportcontrol.util;
 
 import com.kga.metrologicaltechnicalsupportcontrol.exceptions.WorkPlanFileToDataBaseException;
+import com.kga.metrologicaltechnicalsupportcontrol.model.Equipment;
 import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -143,6 +144,12 @@ class WorkPlanFileToDataBaseTest {
         log.info("Class {}, getTechObjectWithErrorCountTechObject, count Tech Objects after set origin: {}", getClass().getName(), workPlanFileToDataBase.getCountTechObject());
     }
 
+    @Test
+    void getEquipmentsCountsShouldEqualCountTitleEquipmentTest(){
+        Set<Equipment> equipmentSetFromWorkPlanFileToDataBase = workPlanFileToDataBase.getEquipments();
+        log.info("Count of equipments in properties: {}, size of equipmentSetFromWorkPlanFileToDataBase: {}, set of equipments from workPlanFileToDataBase: {}", countTitleEquipmentTest,equipmentSetFromWorkPlanFileToDataBase.size(), equipmentSetFromWorkPlanFileToDataBase);
+        assertThat(equipmentSetFromWorkPlanFileToDataBase.size(), is(countTitleEquipmentTest));
+    }
 
 
 
