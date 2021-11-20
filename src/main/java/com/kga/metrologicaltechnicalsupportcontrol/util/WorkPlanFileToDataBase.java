@@ -25,7 +25,6 @@ import java.util.*;
 @Component
 @Setter
 @Getter
-@Data
 public class WorkPlanFileToDataBase {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
