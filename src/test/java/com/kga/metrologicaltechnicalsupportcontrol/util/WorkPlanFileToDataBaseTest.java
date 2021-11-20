@@ -151,6 +151,17 @@ class WorkPlanFileToDataBaseTest {
         assertThat(equipmentSetFromWorkPlanFileToDataBase.size(), is(countTitleEquipmentTest));
     }
 
+    @Test
+    void getEquipmentsWithErrorCountEquipmentsShouldBeWorkPlanFileToDataBaseException(){
+        workPlanFileToDataBase.setCountTitleEquipment(countTitleEquipmentTest-1);
+        log.info("Class {}, getEquipmentsWithErrorCountEquipmentsShouldBeWorkPlanFileToDataBaseException,count equipments after correct: {}", getClass().getName(), workPlanFileToDataBase.getCountTitleEquipment());
+        Exception exception = assertThrows(WorkPlanFileToDataBaseException.class, () -> workPlanFileToDataBase.getEquipments());
+        log.info("Class {}, getEquipmentsWithErrorCountEquipmentsShouldBeWorkPlanFileToDataBaseException, exception message: {}", getClass().getName(), exception.getMessage());
+        log.info("Class {}, getEquipmentsWithErrorCountEquipmentsShouldBeWorkPlanFileToDataBaseException, workPlanFileToDataBase.getErrorList(): {}", getClass().getName(), workPlanFileToDataBase.getErrorList());
+        workPlanFileToDataBase.setCountTechObject(countTitleEquipmentTest);
+        log.info("Class {}, getEquipmentsWithErrorCountEquipmentsShouldBeWorkPlanFileToDataBaseException, count equipments after set origin: {}", getClass().getName(), workPlanFileToDataBase.getCountTitleEquipment());
+    }
+
 
 
 }
