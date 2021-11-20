@@ -37,7 +37,10 @@ class WorkPlanFileToDataBaseTest {
     private Integer endRowTest;
 
     @Value("#{${work-plan-file.sheet}-1}")
-    private Integer sheet;
+    private Integer sheetTest;
+
+    @Value("${work-plan-file.message.error.count-tech-object}")
+    private String errorCountTechObjectTest;
 
 
 
@@ -83,9 +86,17 @@ class WorkPlanFileToDataBaseTest {
 
     @Test
     void numberSheetIsEquals(){
-        log.info("workPlanFileToDataBase.getSheet: {} and endRowTest: {}", workPlanFileToDataBase.getSheet(),sheet);
-        assertThat(workPlanFileToDataBase.getSheet(), is(sheet));
+        log.info("workPlanFileToDataBase.getSheet: {} and sheetTest: {}", workPlanFileToDataBase.getSheet(), sheetTest);
+        assertThat(workPlanFileToDataBase.getSheet(), is(sheetTest));
     }
+
+    @Test
+    void errorCountTechObjectShouldEqualValueInFileProperties(){
+        log.info("workPlanFileToDataBase.errorCountTechObjectShouldEqualValueInFileProperties: {} and endRowTest: {}", workPlanFileToDataBase.getErrorCountTechObject(), errorCountTechObjectTest);
+        assertThat(workPlanFileToDataBase.getErrorCountTechObject(), is(errorCountTechObjectTest));
+    }
+
+
 
     @Test
     void getTechObjectTest(){

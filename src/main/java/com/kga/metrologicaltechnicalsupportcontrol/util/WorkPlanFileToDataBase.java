@@ -55,7 +55,7 @@ public class WorkPlanFileToDataBase {
     @Value("#{${work-plan-file.sheet}-1}")//В настройках и файле отчет колонки идет от 1, но при программной обработке файла отчет идет от нуля
     private Integer sheet;
 
-    @Value("${work-plan-file.message.error.count-tech-object}" )
+    @Value("${work-plan-file.message.error.count-tech-object}")
     private String errorCountTechObject;
     @Value("${work-plan-file.message.error.count-equipment}" )
     private String errorCountEquipment;
