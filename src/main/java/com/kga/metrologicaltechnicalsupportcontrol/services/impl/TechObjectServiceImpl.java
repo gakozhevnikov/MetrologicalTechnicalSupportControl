@@ -40,7 +40,7 @@ public class TechObjectServiceImpl implements BaseModelService<TechObject, Long>
 
     @Override
     public List<TechObject> saveAllAndFlush(List<TechObject> techObjects) {
-        log.info("Class {}, method add, value entity.getTitle: {}",getClass().getName(), techObjects);
+        log.info("Class {}, method add, values techObjects: {}",getClass().getName(), techObjects);
         return techObjectRepository.saveAllAndFlush(techObjects);
     }
 
