@@ -47,7 +47,7 @@ public class TechObjectServiceImpl implements BaseModelService<TechObject, Long>
 
     public List<TechObject> saveAllAndFlushFromFile() {
         List<TechObject> techObjectsList = new ArrayList<>(workPlanFileToDataBase.getTechObjects());
-        log.info("Class {}, method createTechObject, value List<TechObject> techObjectsList: {}",getClass().getName(), techObjectsList);
+        log.info("Class {}, method createTechObject, value techObjectsList: {}",getClass().getName(), techObjectsList);
         return techObjectRepository.saveAllAndFlush(techObjectsList);
     }
 
