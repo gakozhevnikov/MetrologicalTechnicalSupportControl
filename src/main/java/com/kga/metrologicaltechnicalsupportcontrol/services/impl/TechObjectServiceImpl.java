@@ -76,4 +76,10 @@ public class TechObjectServiceImpl implements BaseModelService<TechObject, Long>
         Optional<TechObject> optionalTechObject = techObjectRepository.findById(id);
         return optionalTechObject.orElse(null);
     }
+
+    public TechObject findTechObjectByTitle(String title){
+        log.info("Class {}, method findTechObjectByTitle, value title: {}",getClass().getName(), title);
+        return techObjectRepository.findTechObjectByTitle(title);
+    }
+
 }
