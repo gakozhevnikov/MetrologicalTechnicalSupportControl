@@ -5,11 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotEmpty;
+
 @Getter
 @Setter
 @ToString
 public abstract class AbstractTitleBaseDTO extends AbstractBaseDTO implements Title {
 
+    @NotEmpty
     private String title;
 
     public AbstractTitleBaseDTO(String title) {
