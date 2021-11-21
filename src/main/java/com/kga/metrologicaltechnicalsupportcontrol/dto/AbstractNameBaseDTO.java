@@ -1,25 +1,27 @@
 package com.kga.metrologicaltechnicalsupportcontrol.dto;
 
 import com.kga.metrologicaltechnicalsupportcontrol.BaseName;
-import com.kga.metrologicaltechnicalsupportcontrol.Title;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
 @ToString
 public abstract class AbstractNameBaseDTO extends AbstractBaseDTO implements BaseName {
 
-    private String title;
+    @NotEmpty
+    private String name;
 
-    public AbstractNameBaseDTO(String title) {
-        this.title = title;
+    public AbstractNameBaseDTO(String name) {
+        this.name = name;
     }
 
-    public AbstractNameBaseDTO(Long id, String title) {
+    public AbstractNameBaseDTO(Long id, String name) {
         super(id);
-        this.title = title;
+        this.name = name;
     }
 
 }
