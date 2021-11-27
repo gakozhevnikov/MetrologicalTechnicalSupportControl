@@ -5,7 +5,7 @@ import com.kga.metrologicaltechnicalsupportcontrol.model.User;
 
 public class UserFacade {
 
-    public UserDTO userToUsetDTO(User user){
+    public UserDTO userToUserDTO(User user){
         UserDTO userDTO = new UserDTO();
         userDTO.setId(userDTO.getId());
         userDTO.setUserName(userDTO.getName());
