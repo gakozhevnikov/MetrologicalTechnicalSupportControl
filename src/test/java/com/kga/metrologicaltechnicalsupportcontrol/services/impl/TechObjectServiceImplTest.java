@@ -162,7 +162,7 @@ class TechObjectServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        log.info("Class {}, method setUp, techObjectService.getTechObjectRepository().deleteAll(): ", getClass().getName());
+        log.info("Class {}, method setUp, techObjectService.deleteAll(): ", getClass().getName());
         techObjectService.deleteAll();
     }
 }
