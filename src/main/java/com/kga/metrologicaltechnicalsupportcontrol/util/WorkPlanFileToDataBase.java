@@ -61,7 +61,7 @@ public class WorkPlanFileToDataBase {
     @Value("${work-plan-file.message.error.sheet.null}" )
     private String errorSheetNull;
 
-    private Set<TechObject> techObjects = new TreeSet<>();//Сортированное без повторений множество, такое множество необходимо для чтобы не было повторений, т.е. только уникальные значения и сортировка для удобства поиска
+    private Set<TechObject> techObjectsSet = new TreeSet<>();//Сортированное без повторений множество, такое множество необходимо для чтобы не было повторений, т.е. только уникальные значения и сортировка для удобства поиска
     private Set<Equipment> equipmentSet = new TreeSet<>();
 
     boolean hasError = false;
@@ -101,7 +101,7 @@ public class WorkPlanFileToDataBase {
             this.setHasErrorAndErrorList(String.format("Class %s, getTechObjects Exception %s", getClass().getName(), e));//Do a test in the future
         }
         if(techObjectsTmp.size()==countTechObject){
-            techObjects=techObjectsTmp;
+            techObjectsSet=techObjectsTmp;
         }else{
             this.setHasErrorAndErrorList(makesStringOfErrorMessageAndModelTitle(techObjectsTmp, errorCountTechObject));//Do a test in the future
         }
@@ -110,7 +110,7 @@ public class WorkPlanFileToDataBase {
     public Set<TechObject> getTechObjects(){
         this.setTechObjectsFromFile();
         if (!hasError()){
-            return this.techObjects;
+            return this.techObjectsSet;
         } else {
             throw new WorkPlanFileToDataBaseException(errorList);
         }
