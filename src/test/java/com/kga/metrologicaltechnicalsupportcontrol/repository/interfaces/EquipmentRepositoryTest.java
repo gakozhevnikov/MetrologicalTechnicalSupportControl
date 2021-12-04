@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -47,6 +48,21 @@ public class EquipmentRepositoryTest {
         log.info("Class {}, method shouldFindEquipmentByTitle, equipmentList: {}", getClass().getName(), equipmentList);
         assertThat(equipmentList, hasSize(1));
         assertThat(equipmentList.get(0).getTitle(), is(titleTest));
+        tearDown();
+    }
+
+    @Test
+    void shouldGetEquipmentById(){
+        setUp();
+        Equipment equipment = new Equipment();
+        String titleTest= "Test in EquipmentRepositoryTest";
+        equipment.setTitle(titleTest);
+        log.info("Class {}, method shouldGetEquipmentById, equipment.getTitle(): {}",getClass().getName(), equipment.getTitle());
+        Long idAfterSave = equipmentRepository.save(equipment).getId();
+        log.info("Class {}, method shouldGetEquipmentById, idAfterSave: {}", getClass().getName(), idAfterSave);
+        Long idAfterGetId = equipmentRepository.getById(idAfterSave).getId();
+        log.info("Class {}, method shouldGetEquipmentById, idAfterGetId: {}", getClass().getName(), idAfterGetId);
+        assertThat(Objects.equals(idAfterGetId, idAfterSave), is(true));
         tearDown();
     }
 
