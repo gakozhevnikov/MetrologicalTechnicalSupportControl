@@ -34,15 +34,15 @@ public class MaintenanceOperations implements HasId {
     //продумать про базовые общие операции
 
     /**Вид обслуживания к которому относиться данная операция*/
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private TypeService typeService;
 
     /**Назначение операции к которому относиться данная операция*/
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private PurposeOperations purposeOperations;
 
     /**Оборудование к которому относиться операция*/
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "maintenanceOperations")
+    @ManyToMany( mappedBy = "maintenanceOperations")
     private List<Equipment> equipment;
 
 }

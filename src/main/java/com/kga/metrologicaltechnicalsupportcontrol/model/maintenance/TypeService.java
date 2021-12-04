@@ -21,7 +21,7 @@ public class TypeService implements HasId {
     private String designation;
 
     /**Для создания связи между видом обслуживания и операциями обслуживания*/
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "typeService")
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "typeService")
     private List<MaintenanceOperations> maintenanceOperations;
 
 }

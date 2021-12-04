@@ -44,7 +44,7 @@ public class Equipment implements HasId, Comparable<Equipment>, Title {
     private TechObject techObject;
 
     /**Операции обслуживания*/
-    @ManyToMany
+    @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(name = "EQUIPMENT_MAINTENANCE_OPERATIONS",
                 joinColumns = @JoinColumn(name = "EQUIPMENT_ID"),
     inverseJoinColumns = @JoinColumn (name = "MAINTENANCE_OPERATIONS_ID"))
