@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Data
@@ -66,7 +67,8 @@ public class EquipmentServiceImpl implements BaseModelService<Equipment, Long> {
     @Override
     public Equipment getById(Long id) {
         log.info("Class {}, method getById, value Id of equipments: {}",getClass().getName(), id);
-        return equipmentRepository.getById(id);
+        Optional<Equipment> optionalEquipment = equipmentRepository.findById(id);
+        return optionalEquipment.orElse(null);//refactor with new throw
     }
 
     public Equipment findEquipmentByTitle(String title){
