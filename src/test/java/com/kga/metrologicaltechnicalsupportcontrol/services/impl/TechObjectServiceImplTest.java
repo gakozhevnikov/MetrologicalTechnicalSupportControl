@@ -139,7 +139,7 @@ class TechObjectServiceImplTest {
         techObjectService.deleteById(id);
         List<TechObject> findAllListAfterDelete = techObjectService.findAll();
 
-        log.info("Class {}, method getById, " +
+        log.info("Class {}, method deleteById, " +
                         "id: {}, " +
                         "findAllList: {}, "+
                         "findAllListAfterDelete: {}",
