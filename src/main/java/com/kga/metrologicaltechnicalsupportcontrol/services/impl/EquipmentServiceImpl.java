@@ -67,7 +67,7 @@ public class EquipmentServiceImpl implements BaseModelService<Equipment, Long> {
     @Override
     public Equipment getById(Long id) {
         log.info("Class {}, method getById, value Id of equipments: {}",getClass().getName(), id);
-        Optional<Equipment> optionalEquipment = equipmentRepository.findById(id);
+        Optional<Equipment> optionalEquipment = equipmentRepository.findById(id);//Do not use .getById, need .findById
         return optionalEquipment.orElse(null);//refactor with new throw
     }
 
