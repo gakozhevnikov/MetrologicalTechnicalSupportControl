@@ -10,7 +10,7 @@ public class EquipmentFacade {
     public EquipmentDTO equipmentToEquipmentDTO(Equipment equipment){
         EquipmentDTO equipmentDTO = new EquipmentDTO();
         equipmentDTO.setId(equipment.getId());
-        equipmentDTO.setTitle(equipmentDTO.getTitle());
+        equipmentDTO.setTitle(equipment.getTitle());
         return equipmentDTO;
     }
 }
