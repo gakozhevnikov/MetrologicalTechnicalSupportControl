@@ -28,7 +28,7 @@ public class TechObject implements Comparable<TechObject>, HasId, Title {
     private WorkPlan workPlan;*/
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "techObject")
-    private List<Equipment> equipments;
+    private List<Position> equipments;
 
     @Override
     public int compareTo(TechObject o) {
