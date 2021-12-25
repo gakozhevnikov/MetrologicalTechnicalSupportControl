@@ -3,7 +3,7 @@ package com.kga.metrologicaltechnicalsupportcontrol.services.impl;
 import com.kga.metrologicaltechnicalsupportcontrol.model.Equipment;
 import com.kga.metrologicaltechnicalsupportcontrol.model.documents.TypeApproval;
 import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.EquipmentRepository;
-import com.kga.metrologicaltechnicalsupportcontrol.services.interfaces.BaseModelService;
+import com.kga.metrologicaltechnicalsupportcontrol.services.interfaces.SecondTypeParameter;
 import com.kga.metrologicaltechnicalsupportcontrol.util.WorkPlanFileToDataBase;
 import lombok.Data;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Service
 @Data
-public class EquipmentServiceImpl implements BaseModelService<Equipment, Long, TypeApproval> {
+public class EquipmentServiceImpl implements SecondTypeParameter<Equipment, Long, TypeApproval> {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final WorkPlanFileToDataBase workPlanFileToDataBase;

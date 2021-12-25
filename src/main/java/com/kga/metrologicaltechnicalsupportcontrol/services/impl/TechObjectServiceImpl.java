@@ -3,7 +3,7 @@ package com.kga.metrologicaltechnicalsupportcontrol.services.impl;
 import com.kga.metrologicaltechnicalsupportcontrol.model.Position;
 import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
 import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.TechObjectRepository;
-import com.kga.metrologicaltechnicalsupportcontrol.services.interfaces.BaseModelService;
+import com.kga.metrologicaltechnicalsupportcontrol.services.interfaces.SecondTypeParameter;
 import com.kga.metrologicaltechnicalsupportcontrol.util.WorkPlanFileToDataBase;
 import lombok.Data;
 import lombok.Getter;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @Data
-public class TechObjectServiceImpl implements BaseModelService<TechObject, Long, Position> {
+public class TechObjectServiceImpl implements SecondTypeParameter<TechObject, Long, Position> {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final WorkPlanFileToDataBase workPlanFileToDataBase;
