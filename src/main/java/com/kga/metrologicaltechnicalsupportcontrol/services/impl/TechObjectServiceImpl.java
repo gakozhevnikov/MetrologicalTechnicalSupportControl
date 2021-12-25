@@ -1,5 +1,6 @@
 package com.kga.metrologicaltechnicalsupportcontrol.services.impl;
 
+import com.kga.metrologicaltechnicalsupportcontrol.model.Position;
 import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
 import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.TechObjectRepository;
 import com.kga.metrologicaltechnicalsupportcontrol.services.interfaces.BaseModelService;
@@ -20,7 +21,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @Data
-public class TechObjectServiceImpl implements BaseModelService<TechObject, Long> {
+public class TechObjectServiceImpl implements BaseModelService<TechObject, Long, Position> {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final WorkPlanFileToDataBase workPlanFileToDataBase;
@@ -77,9 +78,16 @@ public class TechObjectServiceImpl implements BaseModelService<TechObject, Long>
         return optionalTechObject.orElse(null);
     }
 
-    public TechObject findTechObjectByTitle(String title){
-        log.info("Class {}, method findTechObjectByTitle, value title: {}",getClass().getName(), title);
+    @Override
+    public TechObject findByTitle(String title) {
+        log.info("Class {}, method findByTitle, value title: {}",getClass().getName(), title);
         return techObjectRepository.findTechObjectByTitle(title);
+    }
+
+    @Override
+    public TechObject findByObject(Position position) {//need testing
+        log.info("Class {}, method findByObject, value Position: {}",getClass().getName(), position);
+        return techObjectRepository.findTechObjectByPositionsContains(position);
     }
 
 }

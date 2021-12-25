@@ -1,6 +1,7 @@
 package com.kga.metrologicaltechnicalsupportcontrol.services.impl;
 
 import com.kga.metrologicaltechnicalsupportcontrol.model.Equipment;
+import com.kga.metrologicaltechnicalsupportcontrol.model.documents.TypeApproval;
 import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.EquipmentRepository;
 import com.kga.metrologicaltechnicalsupportcontrol.services.interfaces.BaseModelService;
 import com.kga.metrologicaltechnicalsupportcontrol.util.WorkPlanFileToDataBase;
@@ -16,7 +17,7 @@ import java.util.Optional;
 
 @Service
 @Data
-public class EquipmentServiceImpl implements BaseModelService<Equipment, Long> {
+public class EquipmentServiceImpl implements BaseModelService<Equipment, Long, TypeApproval> {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final WorkPlanFileToDataBase workPlanFileToDataBase;
@@ -71,9 +72,16 @@ public class EquipmentServiceImpl implements BaseModelService<Equipment, Long> {
         return optionalEquipment.orElse(null);//refactor with new throw
     }
 
-    public Equipment findEquipmentByTitle(String title){
-        log.info("Class {}, method findEquipmentByTitle, value Id of equipments: {}",getClass().getName(), title);
+    @Override
+    public Equipment findByTitle(String title){
+        log.info("Class {}, method findByTitle, value Id of equipments: {}",getClass().getName(), title);
         return equipmentRepository.findEquipmentByTitle(title);
+    }
+
+    @Override
+    public Equipment findByObject(TypeApproval typeApproval) {//need testing
+        log.info("Class {}, method findByObject, TypeApproval: {}",getClass().getName(), typeApproval);
+        return equipmentRepository.findEquipmentByTypeApproval(typeApproval);
     }
 
 }
