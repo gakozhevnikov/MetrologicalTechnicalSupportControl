@@ -35,20 +35,20 @@ public class TechObjectServiceImpl implements BaseModelService<TechObject, Long,
 
     @Override
     public TechObject save(TechObject entity) {
-        log.info("Class {}, method add, value entity.getTitle: {}",getClass().getName(), entity.getTitle());
+        log.info("Class {}, method add, save entity.getTitle: {}",getClass().getName(), entity.getTitle());
         return techObjectRepository.saveAndFlush(entity);
     }
 
     @Override
     public List<TechObject> saveAllAndFlush(List<TechObject> techObjects) {
-        log.info("Class {}, method add, values techObjects: {}",getClass().getName(), techObjects);
+        log.info("Class {}, method saveAllAndFlush, values techObjects: {}",getClass().getName(), techObjects);
         return techObjectRepository.saveAllAndFlush(techObjects);
     }
 
 
     public List<TechObject> saveAllAndFlushFromFile() {
         List<TechObject> techObjectsList = new ArrayList<>(workPlanFileToDataBase.getTechObjects());
-        log.info("Class {}, method createTechObject, value techObjectsList: {}",getClass().getName(), techObjectsList);
+        log.info("Class {}, method saveAllAndFlushFromFile, value techObjectsList: {}",getClass().getName(), techObjectsList);
         return techObjectRepository.saveAllAndFlush(techObjectsList);
     }
 
@@ -61,7 +61,7 @@ public class TechObjectServiceImpl implements BaseModelService<TechObject, Long,
 
     @Override
     public void deleteById(Long id) {
-        log.info("Class {}, method delete, ", getClass().getName());
+        log.info("Class {}, method deleteById, ", getClass().getName());
         techObjectRepository.deleteById(id);
     }
 
