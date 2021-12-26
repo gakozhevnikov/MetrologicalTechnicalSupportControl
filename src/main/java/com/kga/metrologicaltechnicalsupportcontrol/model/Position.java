@@ -24,7 +24,8 @@ public class Position implements HasId, Title, Comparable<Position>{
     @Column
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.EAGER)
     TechObject techObject;
 
 
