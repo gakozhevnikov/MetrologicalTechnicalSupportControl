@@ -33,7 +33,7 @@ class TechObjectServiceImplTest {
         log.info("Class {}, method setUp, Objects.requireNonNull(FileManager.getWorkPlanFile()).exists(): {}" +
                         "techObjectService.getWorkPlanFileToDataBase().getTechObjects().isEmpty(): {}",
                 getClass().getName(), Objects.requireNonNull(FileManager.getWorkPlanFile()).exists(),
-                !techObjectService.getWorkPlanFileToDataBase().getTechObjectsSet().isEmpty());
+                techObjectService.getWorkPlanFileToDataBase().getTechObjectsSet().isEmpty());
         if(Objects.requireNonNull(FileManager.getWorkPlanFile()).exists() && techObjectService.getWorkPlanFileToDataBase().getTechObjectsSet().isEmpty()){
             log.info("Class {}, method setUp, in statement if result true", getClass().getName());
             techObjectService.getWorkPlanFileToDataBase().setTechObjectsFromFile();
