@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -162,6 +163,12 @@ class WorkPlanFileToDataBaseTest {
         log.info("Class {}, getEquipmentsWithErrorCountEquipmentsShouldBeWorkPlanFileToDataBaseException, count equipments after set origin: {}", getClass().getName(), workPlanFileToDataBase.getCountTitleEquipment());
     }
 
+    @Test
+    void shouldMapContainsPositions(){
+        workPlanFileToDataBase.setMapObjectPositionFromFile();
+        Map<String, Set<String>> mapObjectPosition = workPlanFileToDataBase.getMapObjectPosition();
+        log.info("Class {}, shouldMapContainsPositions, mapObjectPosition: {}", getClass().getName(), mapObjectPosition);
+    }
 
 
 }
