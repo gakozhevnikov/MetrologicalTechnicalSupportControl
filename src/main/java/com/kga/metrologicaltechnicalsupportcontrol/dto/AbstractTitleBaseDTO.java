@@ -15,6 +15,13 @@ public abstract class AbstractTitleBaseDTO extends AbstractBaseDTO implements Ti
     @NotEmpty
     private String title;
 
+    public AbstractTitleBaseDTO() {
+    }
+
+    public AbstractTitleBaseDTO(Long id) {
+        super(id);
+    }
+
     public AbstractTitleBaseDTO(String title) {
         this.title = title;
     }
