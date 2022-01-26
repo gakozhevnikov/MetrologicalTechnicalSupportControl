@@ -2,12 +2,10 @@ package com.kga.metrologicaltechnicalsupportcontrol.util;
 
 
 import com.kga.metrologicaltechnicalsupportcontrol.Title;
-import com.kga.metrologicaltechnicalsupportcontrol.exceptions.ErrorInfo;
-import com.kga.metrologicaltechnicalsupportcontrol.exceptions.ErrorType;
 import com.kga.metrologicaltechnicalsupportcontrol.exceptions.WorkPlanFileToDataBaseException;
 import com.kga.metrologicaltechnicalsupportcontrol.model.Equipment;
+import com.kga.metrologicaltechnicalsupportcontrol.model.Position;
 import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.poi.ss.usermodel.*;
@@ -17,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -40,7 +37,7 @@ public class WorkPlanFileToDataBase {
 
     @Value("${work-plan-file.end-row}")
     private Integer endRow;
-
+    //В настройках и файле отчет колонки идет от 1, но при программной обработке файла отчет идет от нуля
     //@Value("${work-plan-file.column-title-equipment}")
     @Value("#{${work-plan-file.column-title-equipment}-1}")
     //В настройках и файле отчет колонки идет от 1, но при программной обработке файла отчет идет от нуля
@@ -50,6 +47,9 @@ public class WorkPlanFileToDataBase {
     private Integer columnTextObject;
     @Value("#{${work-plan-file.column-title-object}-1}")
     private Integer columnTitleObject;
+    /**Переменная в которой хранится значение столбца в котором перечисляются позиции. В настройках и файле отчет колонки идет от 1, но при программной обработке файла отчет идет от нуля*/
+    @Value("#{${work-plan-file.column-position}-1}")
+    private Integer columnPosition;
 
     @Value("#{${work-plan-file.sheet}-1}")//В настройках и файле отчет колонки идет от 1, но при программной обработке файла отчет идет от нуля
     private Integer sheet;
@@ -63,6 +63,11 @@ public class WorkPlanFileToDataBase {
 
     private Set<TechObject> techObjectsSet = new TreeSet<>();//Сортированное без повторений множество, такое множество необходимо для чтобы не было повторений, т.е. только уникальные значения и сортировка для удобства поиска
     private Set<Equipment> equipmentSet = new TreeSet<>();
+
+    /**Поле для перечня наименования позиций(мест установки) оборудования на объектах*/
+    private Set<String> positionTitleStringSet = new TreeSet<>();//uniqueLocation
+    /**Поле для хранения пар: id объекта {@link TechObject} и наименований позиции у данного объекта*/
+    private Map<String, Set<String>> mapObjectPosition = new TreeMap<>();//mapObjectLocation
 
     boolean hasError = false;
 
@@ -155,6 +160,73 @@ public class WorkPlanFileToDataBase {
         this.setEquipmentsFromFile();
         if (!hasError()){
             return this.equipmentSet;
+        } else {
+            throw new WorkPlanFileToDataBaseException(errorList);
+        }
+    }
+
+    /**Метод заполняющий Map mapObjectPosition {@link WorkPlanFileToDataBase#mapObjectPosition} из файла
+     * @see WorkPlanFileToDataBase#mapObjectPosition */
+    public void setMapObjectPositionFromFile(){
+        String locationObjectString = "";
+        String locationString = "";
+        try {
+            Sheet sheet =getSheetFromFile();
+            if(null!=sheet){
+                for (int rowInt = startRow; rowInt <= endRow; rowInt++){
+                    //читаем первое поле (отсчет полей идет с нуля) т.е. по сути читаем второе - cell с 0, а Row с 1
+                    Row row = sheet.getRow(rowInt);
+                    //читаем столбцы
+                    Cell cell = row.getCell(columnPosition);
+                    Cell cellObject = row.getCell(columnTextObject);
+                    Cell cellObjectTitle = row.getCell(columnTitleObject);
+                    if(cellObject.getStringCellValue().equals("Объект:")){
+                        if (!locationObjectString.equals("")){
+                            mapObjectPosition.put(locationObjectString, new TreeSet<>(positionTitleStringSet));
+                            positionTitleStringSet.clear();
+                        }
+                        locationObjectString=cellObjectTitle.getStringCellValue();
+                    }
+                    //Проводим проверку на пустые ячейки, т.к. если ячейка будет пустая то в дальнейшем будет возникать ошибка.
+                    if (cell!=null){
+                        locationString=cell.getStringCellValue();
+                    }
+                    else {
+                        locationString="";
+                        continue;
+                    }
+                    if((rowInt != endRow)&&(locationString.equals("")| locationString.equals("-"))){//Убираем разные не нужные вспомогательные слова которые попадаются по ходу чтения из файла
+                        locationString="";
+                        continue;
+                    }
+                    else if(!locationObjectString.equals("")&&!locationString.equals(""))  {
+                        positionTitleStringSet.add(locationString);
+                    }
+                    if (rowInt == endRow){
+                        mapObjectPosition.put(locationObjectString, new TreeSet<>(positionTitleStringSet));
+                        positionTitleStringSet.clear();
+                    }
+
+                }
+            } else{
+                this.setHasErrorAndErrorList(errorSheetNull);//Do a test in the future
+            }
+
+        } catch (IOException e) {
+            log.info("Class {}, setMapObjectPositionFromFile Exception {}", getClass().getName(),e.toString());
+            this.setHasErrorAndErrorList(String.format("Class %s, setMapObjectPositionFromFile Exception %s", getClass().getName(), e));//Do a test in the future
+        }
+    }
+
+    public Map<String, Set<String>> getMapObjectPosition() {
+        this.setMapObjectPositionFromFile();
+        return mapObjectPosition;
+    }
+
+    public Set<Position> getPositions(TechObject techObject){
+        this.setMapObjectPositionFromFile();
+        if (!hasError()){
+            return new TreeSet<>();
         } else {
             throw new WorkPlanFileToDataBaseException(errorList);
         }
