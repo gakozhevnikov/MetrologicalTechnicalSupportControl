@@ -43,7 +43,7 @@ public class AuthController {
         //model.addAttribute("greeting", "Hello, welcome");
         //request.setAttribute("action", "Please login");
         modelAndView.addObject();
-        return modelAndView;//стоп 05.10.21
+        return modelAndView;
     }*/
 
 
