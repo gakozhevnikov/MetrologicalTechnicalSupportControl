@@ -33,6 +33,10 @@ public class TypeApproval extends AbstractBaseDocument {
     @Column
     private String nameMeasuringInstruments;
 
+    /**Обозначение типа СИ(РМГ 26 п. 6.2 measuring instruments)*/
+    @Column
+    private String designationOfMeasuringInstruments;
+
     /**Дата утверждения сертификата*/
     @Column(nullable = false)
     private LocalDateTime dateOfApproval;
