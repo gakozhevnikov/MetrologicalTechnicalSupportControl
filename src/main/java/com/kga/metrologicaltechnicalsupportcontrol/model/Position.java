@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**Сущность для хранения и работы с обозначениями позиций установки оборудования на объектах */
 @Getter
@@ -28,6 +29,8 @@ public class Position implements HasId, Title, Comparable<Position>{
     @ManyToOne(fetch = FetchType.EAGER)
     TechObject techObject;
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "position")
+    private List<EquipmentWithAttributes> equipmentWithAttributes;
 
     @Override
     public Long getId() {
