@@ -57,5 +57,10 @@ public class TypeServiceRepositoryTest {
                 ,getClass().getName(), typeServiceReturnByDesignation);
         assertThat(typeServiceReturnByDesignation.getDesignation().equals(designationFirstTest), is(true));
     }
+    @Test
+    void shouldReturnEmptyTypeService(){//Only see log file
+        log.info("Class {}, method shouldReturnEmptyTypeService, typeServiceRepository.findTypeServiceByDesignation() {}"
+                ,getClass().getName(), typeServiceRepository.findTypeServiceByDesignation("No"));
+    }
 
 }
