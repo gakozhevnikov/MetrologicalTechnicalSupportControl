@@ -3,6 +3,8 @@ package com.kga.metrologicaltechnicalsupportcontrol.util;
 import com.kga.metrologicaltechnicalsupportcontrol.exceptions.WorkPlanFileToDataBaseException;
 import com.kga.metrologicaltechnicalsupportcontrol.model.Equipment;
 import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
+import com.kga.metrologicaltechnicalsupportcontrol.model.WorkPlan;
+import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.TypeServiceRepository;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Month;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +28,9 @@ class WorkPlanFileToDataBaseTest {
 
     @Autowired
     WorkPlanFileToDataBase workPlanFileToDataBase;
+
+    @Autowired
+    TypeServiceRepository typeServiceRepository;
 
     @Value("${work-plan-file.count-tech-object}")
     private Integer countTechObjectTest;
@@ -170,5 +176,17 @@ class WorkPlanFileToDataBaseTest {
         log.info("Class {}, shouldMapContainsPositions, mapObjectPosition: {}", getClass().getName(), mapObjectPosition);
     }
 
-
+    @Test
+    void shouldReturnWorkPlanFromMethodFactoryWorkPlan(){
+        typeServiceRepository.deleteAllInBatch();
+        WorkPlan workPlan = new WorkPlan();
+        String stringCellFirstValue = "Test type service";
+        String stringCellSecondValue = "Test date of work";
+        workPlan = workPlanFileToDataBase.factoryWorkPlan(Month.JANUARY, stringCellFirstValue, stringCellSecondValue, workPlan);
+        log.info("Class {}, shouldReturnWorkPlanFromMethodFactoryWorkPlan, workPlan: {}", getClass().getName(), workPlan);
+        assertThat(workPlan.getMonth().equals(Month.JANUARY), is(true));
+        assertThat(workPlan.getTypeService().getDesignation().equals(stringCellFirstValue), is(true));
+        assertThat(workPlan.getDateOfWork().equals(stringCellSecondValue), is(true));
+        typeServiceRepository.deleteAllInBatch();
+    }
 }
