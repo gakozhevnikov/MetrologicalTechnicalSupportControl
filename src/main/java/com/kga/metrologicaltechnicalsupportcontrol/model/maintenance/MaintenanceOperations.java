@@ -34,11 +34,11 @@ public class MaintenanceOperations implements HasId {
     //продумать про базовые общие операции
 
     /**Вид обслуживания к которому относиться данная операция*/
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private TypeService typeService;
 
     /**Назначение операции к которому относиться данная операция*/
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private PurposeOperations purposeOperations;
 
     /**Оборудование к которому относиться операция*/

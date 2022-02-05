@@ -41,13 +41,13 @@ public class Equipment implements HasId, Comparable<Equipment>, Title {
     private TechObject techObject;//deleted*/
 
     /**Операции обслуживания*/
-    @ManyToMany (fetch = FetchType.EAGER)
+    @ManyToMany (fetch = FetchType.LAZY)
     @JoinTable(name = "EQUIPMENT_MAINTENANCE_OPERATIONS",
                 joinColumns = @JoinColumn(name = "EQUIPMENT_ID"),
     inverseJoinColumns = @JoinColumn (name = "MAINTENANCE_OPERATIONS_ID"))
     private List<MaintenanceOperations> maintenanceOperations;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "equipment")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "equipment")
     private List<EquipmentWithAttributes> equipmentWithAttributes;
 
     @Override

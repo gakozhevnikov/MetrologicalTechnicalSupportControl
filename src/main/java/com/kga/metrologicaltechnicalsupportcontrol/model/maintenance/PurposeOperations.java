@@ -25,7 +25,7 @@ public class PurposeOperations {
     private String designation;
 
     /**Для создания связи между видом обслуживания и операциями назначения*/
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "purposeOperations")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "purposeOperations")
     private List<MaintenanceOperations> maintenanceOperations;
 
 }

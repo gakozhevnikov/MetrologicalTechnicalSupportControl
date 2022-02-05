@@ -27,7 +27,7 @@ public class EquipmentWithAttributes implements HasId, Comparable<EquipmentWithA
     @Column
     private LocalDateTime dateVMI;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Equipment equipment;
 
     @ManyToOne(fetch = FetchType.EAGER)
