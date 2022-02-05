@@ -3,6 +3,7 @@ package com.kga.metrologicaltechnicalsupportcontrol.model.maintenance;
 
 import com.kga.metrologicaltechnicalsupportcontrol.HasId;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -21,7 +22,8 @@ public class TypeService implements HasId {
     private String designation;
 
     /**Для создания связи между видом обслуживания и операциями обслуживания*/
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "typeService")
+    @ToString.Exclude
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "typeService")
     private List<MaintenanceOperations> maintenanceOperations;
 
 }
