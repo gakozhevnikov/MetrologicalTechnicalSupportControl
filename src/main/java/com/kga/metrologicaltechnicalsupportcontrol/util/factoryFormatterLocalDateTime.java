@@ -6,7 +6,6 @@ import java.time.format.DateTimeFormatter;
 public class factoryFormatterLocalDateTime {
 
     public static LocalDateTime parseStringFormatDDMMYYYY(String stringDate){
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        return LocalDateTime.parse(stringDate, dateTimeFormatter);
+        return LocalDateTime.parse(stringDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     }
 }
