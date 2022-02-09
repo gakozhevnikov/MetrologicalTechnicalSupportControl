@@ -10,5 +10,6 @@ import java.util.Set;
 @Repository
 public interface PositionRepository extends JpaRepository<Position, Long> {
     Position findPositionByTitle(String title);
+    Position findPositionByTitleAndTechObject(String title, TechObject techObject);
     Set<Position> findPositionsByTechObject(TechObject techObject);
 }
