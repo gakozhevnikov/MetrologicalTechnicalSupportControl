@@ -27,6 +27,7 @@ public class EquipmentWithAttributes implements HasId, Comparable<EquipmentWithA
     @Column
     private LocalDateTime dateVMI;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     private Equipment equipment;
 
