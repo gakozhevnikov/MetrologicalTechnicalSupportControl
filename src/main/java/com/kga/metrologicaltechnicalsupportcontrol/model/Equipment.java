@@ -47,7 +47,8 @@ public class Equipment implements HasId, Comparable<Equipment>, Title {
     inverseJoinColumns = @JoinColumn (name = "MAINTENANCE_OPERATIONS_ID"))
     private List<MaintenanceOperations> maintenanceOperations;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "equipment")
+    @ToString.Exclude
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "equipment")
     private List<EquipmentWithAttributes> equipmentWithAttributes;
 
     @Override
