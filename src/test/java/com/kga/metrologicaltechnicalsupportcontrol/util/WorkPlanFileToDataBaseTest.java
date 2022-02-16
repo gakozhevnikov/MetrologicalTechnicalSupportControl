@@ -189,4 +189,11 @@ class WorkPlanFileToDataBaseTest {
         assertThat(workPlan.getDateOfWork().equals(stringCellSecondValue), is(true));
         typeServiceRepository.deleteAllInBatch();
     }
+
+    @Test
+    void shouldGetNotEmptyWorkPlanSet(){
+        Set<WorkPlan> workPlanSet = workPlanFileToDataBase.getWorkPlanSet();
+        log.info("Class {}, shouldGetNotEmptyWorkPlanSet, workPlanSet: {}", getClass().getName(), workPlanSet);
+        assertThat(workPlanSet.isEmpty(), is(false));
+    }
 }
