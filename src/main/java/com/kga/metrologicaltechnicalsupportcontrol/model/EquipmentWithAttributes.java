@@ -28,9 +28,10 @@ public class EquipmentWithAttributes implements HasId, Comparable<EquipmentWithA
     private LocalDateTime dateVMI;
 
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Equipment equipment;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.EAGER)
     private Position position;
 
