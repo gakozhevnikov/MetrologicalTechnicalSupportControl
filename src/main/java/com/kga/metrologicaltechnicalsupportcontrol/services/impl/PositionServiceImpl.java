@@ -5,7 +5,7 @@ import com.kga.metrologicaltechnicalsupportcontrol.model.Position;
 import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
 import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.PositionRepository;
 import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.TechObjectRepository;
-import com.kga.metrologicaltechnicalsupportcontrol.services.interfaces.SecondTypeParameterReturnSet;
+import com.kga.metrologicaltechnicalsupportcontrol.services.interfaces.SecondTypeParameterReturnSetFindByObject;
 import com.kga.metrologicaltechnicalsupportcontrol.util.WorkPlanFileToDataBase;
 import lombok.Data;
 import lombok.Getter;
@@ -21,7 +21,7 @@ import java.util.*;
 @Getter
 @Setter
 @Data
-public class PositionServiceImpl implements SecondTypeParameterReturnSet<Position, Long, TechObject> {
+public class PositionServiceImpl implements SecondTypeParameterReturnSetFindByObject<Position, Long, TechObject> {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final WorkPlanFileToDataBase workPlanFileToDataBase;
