@@ -17,6 +17,4 @@ public interface BaseModelService<T, ID> {
 
     T getById(Long id);
 
-    T findByTitle (String title);
-
 }
