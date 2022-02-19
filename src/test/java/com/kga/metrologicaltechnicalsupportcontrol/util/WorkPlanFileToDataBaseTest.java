@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Month;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -191,8 +188,8 @@ class WorkPlanFileToDataBaseTest {
     }
 
     @Test
-    void shouldGetNotEmptyWorkPlanSet(){
-        Set<WorkPlan> workPlanSet = workPlanFileToDataBase.getWorkPlanSet();
+    void shouldGetNotEmptyWorkPlanList(){
+        List<WorkPlan> workPlanSet = workPlanFileToDataBase.getWorkPlans();
         log.info("Class {}, shouldGetNotEmptyWorkPlanSet, workPlanSet: {}", getClass().getName(), workPlanSet);
         assertThat(workPlanSet.isEmpty(), is(false));
     }
