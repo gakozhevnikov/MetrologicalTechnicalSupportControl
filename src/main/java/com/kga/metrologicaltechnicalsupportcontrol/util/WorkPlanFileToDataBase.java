@@ -5,10 +5,7 @@ import com.kga.metrologicaltechnicalsupportcontrol.Title;
 import com.kga.metrologicaltechnicalsupportcontrol.exceptions.WorkPlanFileToDataBaseException;
 import com.kga.metrologicaltechnicalsupportcontrol.model.*;
 import com.kga.metrologicaltechnicalsupportcontrol.model.maintenance.TypeService;
-import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.EquipmentRepository;
-import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.PositionRepository;
-import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.TechObjectRepository;
-import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.TypeServiceRepository;
+import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.poi.ss.usermodel.*;
@@ -22,7 +19,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Month;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -103,6 +99,9 @@ public class WorkPlanFileToDataBase {
     private String errorSheetNull;
     @Value("${work-plan-file.message.error.setting.column}" )
     private String errorSettingColumn;
+    @Value("${work-plan-file.message.error.equipment-with-attributes.repository.get}" )
+    private String errorEwaRepositoryGet;
+
 
     private Set<TechObject> techObjectsSet = new TreeSet<>();//Сортированное без повторений множество, такое множество необходимо для чтобы не было повторений, т.е. только уникальные значения и сортировка для удобства поиска
     private Set<Equipment> equipmentSet = new TreeSet<>();
@@ -113,9 +112,10 @@ public class WorkPlanFileToDataBase {
     private Map<String, Set<String>> mapObjectPosition = new TreeMap<>();//mapObjectLocation
 
     /**Поле для хранения множества рабочего плана {@link com.kga.metrologicaltechnicalsupportcontrol.model.WorkPlan} в котором будет храниться данные файла*/
-    private Set<WorkPlan> workPlanSet = new HashSet<>();
+    private List<WorkPlan> workPlans = new ArrayList<>();
 
     List<Integer> integerListSetting = new ArrayList<>();
+    Map<Month, Integer> monthColumnsMap = new HashMap<>();
 
     boolean hasError = false;
 
@@ -129,6 +129,9 @@ public class WorkPlanFileToDataBase {
     PositionRepository positionRepository;
     @Autowired
     TypeServiceRepository typeServiceRepository;
+    @Autowired
+    EquipmentWithAttributesRepository ewaRepository;
+
 
     public WorkPlanFileToDataBase() {
         //this.setTechObjectsFromFile();//вызов этого метода в конструкторе не работает
@@ -282,10 +285,123 @@ public class WorkPlanFileToDataBase {
         return mapObjectPosition;
     }
 
-    /**Метод выбирающий из файла данные плана работ и сохраняющий их в базе данных*/
-    private Set<WorkPlan> setWorkPlanSetFromFileTwoRow(){
+    /**Метод выбирающий из файла данные плана работ и сохраняющий их в базе данных. Даты и виды ТО в две строки*/
+    private void setWorkPlanSetFromFileTwoRow(){
+        monthColumnsMap.put(Month.JANUARY, columnTitleJanuary);
+        monthColumnsMap.put(Month.FEBRUARY, columnTitleFebruary);
+        monthColumnsMap.put(Month.MARCH, columnTitleMarch);
+        monthColumnsMap.put(Month.APRIL, columnTitleApril);
+        monthColumnsMap.put(Month.MAY, columnTitleMay);
+        monthColumnsMap.put(Month.JUNE, columnTitleJune);
+        monthColumnsMap.put(Month.JULY, columnTitleJuly);
+        monthColumnsMap.put(Month.AUGUST, columnTitleAugust);
+        monthColumnsMap.put(Month.SEPTEMBER, columnTitleSeptember);
+        monthColumnsMap.put(Month.OCTOBER, columnTitleOctober);
+        monthColumnsMap.put(Month.NOVEMBER, columnTitleNovember);
+        monthColumnsMap.put(Month.DECEMBER, columnTitleDecember);
+        try {
+            Sheet sheet =getSheetFromFile();
+            if(null!=sheet){
+                TechObject techObject = new TechObject();
+                for (int rowInt = startRow; rowInt <= endRow; rowInt++){
+                    //WorkPlan workPlan = new WorkPlan();
+                    EquipmentWithAttributes equipmentWithAttributes = new EquipmentWithAttributes();
+                    Position position;
+                    Row rowFirst = sheet.getRow(rowInt);
+                    int rowIntSecond=rowInt+1;
+                    Row rowSecond = sheet.getRow(rowIntSecond);
+                    if (getStringFromCellInMethodSetWorkPlan(rowFirst.getCell(columnTextObject)).equals(textIdentifyObject)) {
+                        techObject = techObjectRepository.findTechObjectByTitle(getStringFromCellInMethodSetWorkPlan(rowFirst.getCell(columnTitleObject)));
+                        if (null==techObject){
+                            TechObject techObjectIntermediate = new TechObject();
+                            techObjectIntermediate.setTitle(getStringFromCellInMethodSetWorkPlan(rowFirst.getCell(columnTitleObject)));
+                            techObject = techObjectRepository.saveAndFlush(techObjectIntermediate);
+                        }
+                        continue;
+                    } else {
+                        Equipment equipment = equipmentRepository.findEquipmentByTitle(getStringFromCellInMethodSetWorkPlan(rowFirst.getCell(columnTitleEquipment)));
+                        if(null == equipment){
+                            equipment = new Equipment();
+                            equipment.setTitle(getStringFromCellInMethodSetWorkPlan(rowFirst.getCell(columnTitleEquipment)));
+                            equipment=equipmentRepository.saveAndFlush(equipment);
+                        }
+                        equipmentWithAttributes.setEquipment(equipment);
+                        equipmentWithAttributes.setSerialNumber(getStringFromCellInMethodSetWorkPlan(rowFirst.getCell(columnSerialNumber)));
+                        String dateVMI = getStringFromCellInMethodSetWorkPlan(rowFirst.getCell(columnDateVMI));
+                        if (null != dateVMI && !dateVMI.equals("")) {
+                            //log.info("Class {}, setWorkPlanSetFromFileTwoRow, dateVMI: {}", getClass().getName(), dateVMI);
+                            equipmentWithAttributes.setDateVMI(FactoryFormatterLocalDateTime.parseStringFormatDDMMYYYY(dateVMI));
+                        }
+                        String positionTitleFromCell = getStringFromCellInMethodSetWorkPlan(rowFirst.getCell(columnPosition));
+                        position = positionRepository.findPositionByTitleAndTechObject(positionTitleFromCell, techObject);
+                        if(null == position){
+                            Position positionIntermediate = new Position();
+                            positionIntermediate.setTitle(positionTitleFromCell);
+                            positionIntermediate.setTechObject(techObject);
+                            position = positionRepository.saveAndFlush(positionIntermediate);
+                        }
+                        equipmentWithAttributes.setPosition(position);
+                        List<EquipmentWithAttributes> ewaListFromRepository = ewaRepository
+                                .findEquipmentWithAttributesByEquipment_TitleAndSerialNumber(equipmentWithAttributes.getEquipment().getTitle()
+                                        , equipmentWithAttributes.getSerialNumber());
+                        EquipmentWithAttributes ewaFromRepository = new EquipmentWithAttributes();
+                        if(null == ewaListFromRepository){
+                            /*log.info("Class {}, setWorkPlanSetFromFileTwoRow, if(null == ewaListFromRepository), equipmentWithAttributes: {}"
+                                    , getClass().getName(), equipmentWithAttributes);*/
+                            ewaFromRepository = ewaRepository.saveAndFlush(equipmentWithAttributes);
+                            /*log.info("Class {}, setWorkPlanSetFromFileTwoRow, if(null == ewaListFromRepository), ewaFromRepository: {}"
+                                    , getClass().getName(), ewaFromRepository);*/
+                        }else if (ewaListFromRepository.size() == 0){
+                            /*log.info("Class {}, setWorkPlanSetFromFileTwoRow, if (ewaListFromRepository.size() == 0), equipmentWithAttributes: {}"
+                                    , getClass().getName(), equipmentWithAttributes);*/
+                            ewaFromRepository = ewaRepository.saveAndFlush(equipmentWithAttributes);
+                            /*log.info("Class {}, setWorkPlanSetFromFileTwoRow, if(null == ewaListFromRepository), ewaFromRepository: {}"
+                                    , getClass().getName(), ewaFromRepository);*/
+                        }else if (ewaListFromRepository.size() == 1){
+                            ewaFromRepository = ewaListFromRepository.get(0);
+                        }else if (ewaListFromRepository.size() > 1){
+                            /*log.info("Class {}, setWorkPlanSetFromFileTwoRow, if (ewaListFromRepository.size() > 1), ewaListFromRepository.size(): {}"
+                                    , getClass().getName(), ewaListFromRepository.size());*/
+                            List<EquipmentWithAttributes> ewaListFromRepositoryFindByPosition = ewaRepository
+                                    .findEquipmentWithAttributesByEquipment_TitleAndSerialNumberAndPosition
+                                    (equipmentWithAttributes.getEquipment().getTitle(), equipmentWithAttributes.getSerialNumber(), equipmentWithAttributes.getPosition());
+                            if(ewaListFromRepositoryFindByPosition.size()==1){
+                                ewaFromRepository = ewaListFromRepositoryFindByPosition.get(0);
+                            }else {
+                                this.setHasErrorAndErrorList(errorEwaRepositoryGet);//Do a test in the future
+                            }
+                        }
+                        for(Map.Entry<Month, Integer> monthColumn : monthColumnsMap.entrySet()){
+                            String typeServiceFromCell = getStringFromCellInMethodSetWorkPlan(rowFirst.getCell(monthColumn.getValue()));
+                            String DateOfWorkFromCell = getStringFromCellInMethodSetWorkPlan(rowSecond.getCell(monthColumn.getValue()));
+                            if (isNullEmpty (typeServiceFromCell)) {
+                                TypeService typeService = typeServiceRepository.findTypeServiceByDesignation(typeServiceFromCell);
+                                if(null == typeService){
+                                    typeService= new TypeService();
+                                    typeService.setDesignation(typeServiceFromCell);
+                                    typeService = typeServiceRepository.saveAndFlush(typeService);
+                                }
+                                WorkPlan workPlan = new WorkPlan();
+                                workPlan.setEquipmentWithAttributes(ewaFromRepository);
+                                workPlan.setDateOfWork(DateOfWorkFromCell);
+                                workPlan.setTypeService(typeService);
+                                workPlan.setMonth(monthColumn.getKey());
+                                this.workPlans.add(workPlan);
+                            }
+                        }
+                    }
+                    rowInt++;
+                }
+            } else{
+                this.setHasErrorAndErrorList(errorSheetNull);//Do a test in the future
+            }
+
+        } catch (IOException e) {
+            log.info("Class {}, setEquipmentsFromFile Exception {}", getClass().getName(),e.toString());
+            this.setHasErrorAndErrorList(String.format("Class %s, setEquipmentsFromFile Exception %s", getClass().getName(), e));//Do a test in the future
+        }
         //Set<WorkPlan> workPlanSet = new TreeSet<>();
-        integerListSetting.add(columnTitleEquipment);
+        /*integerListSetting.add(columnTitleEquipment);
         integerListSetting.add(columnSerialNumber);
         integerListSetting.add(columnTitleJanuary);
         integerListSetting.add(columnTitleFebruary);
@@ -320,16 +436,16 @@ public class WorkPlanFileToDataBase {
                             Position position;
                             Cell firstCell = createCellIfNullInMethodSetWorkPlan(rowFirst, columnInt);
                             Cell secondCell = createCellIfNullInMethodSetWorkPlan(rowSecond, columnInt);
-                            /*log.info("Class {}, setWorkPlanSetFromFileTwoRow, rowInt: {}, columnInt: {}, firstCell.getCellType(): {}, secondCell.getCellType(): {}"
-                                    , getClass().getName(), rowInt, columnInt, firstCell.getCellType(), secondCell.getCellType());*/
+                            *//*log.info("Class {}, setWorkPlanSetFromFileTwoRow, rowInt: {}, columnInt: {}, firstCell.getCellType(): {}, secondCell.getCellType(): {}"
+                                    , getClass().getName(), rowInt, columnInt, firstCell.getCellType(), secondCell.getCellType());*//*
                             String stringCellFirstValue ="";
                             String stringCellSecondValue ="";
-                            /*stringCellFirstValue = firstCell.toString();
-                            stringCellSecondValue = getStringInMethodSetWorkPlan(secondCell, stringCellSecondValue);*/
+                            *//*stringCellFirstValue = firstCell.toString();
+                            stringCellSecondValue = getStringInMethodSetWorkPlan(secondCell, stringCellSecondValue);*//*
                             stringCellFirstValue = getStringInMethodSetWorkPlan(firstCell, stringCellFirstValue);
                             stringCellSecondValue = getStringInMethodSetWorkPlan(secondCell, stringCellSecondValue);
-                            /*log.info("Class {}, setWorkPlanSetFromFileTwoRow, rowInt: {}, columnInt: {}, stringCellFirstValue: {}, stringCellSecondValue: {}"
-                                    , getClass().getName(), rowInt, columnInt,stringCellFirstValue,stringCellSecondValue);*/
+                            *//*log.info("Class {}, setWorkPlanSetFromFileTwoRow, rowInt: {}, columnInt: {}, stringCellFirstValue: {}, stringCellSecondValue: {}"
+                                    , getClass().getName(), rowInt, columnInt,stringCellFirstValue,stringCellSecondValue);*//*
                             if(columnTitleEquipment.equals(columnInt)){
                                 if(stringCellFirstValue.equals("")){
                                     break;
@@ -356,12 +472,12 @@ public class WorkPlanFileToDataBase {
                                     equipmentWithAttributes.setSerialNumber(stringCellFirstValue);
                                 }
                             }else if(columnTitleJanuary.equals(columnInt)){
-                                /*log.info("Class {}, setWorkPlanSetFromFileTwoRow, if(columnTitleJanuary.equals(columnInt)), rowInt: {}, columnInt: {}, stringCellFirstValue: {}, stringCellSecondValue: {}"
-                                        , getClass().getName(), rowInt, columnInt,stringCellFirstValue,stringCellSecondValue);*/
+                                *//*log.info("Class {}, setWorkPlanSetFromFileTwoRow, if(columnTitleJanuary.equals(columnInt)), rowInt: {}, columnInt: {}, stringCellFirstValue: {}, stringCellSecondValue: {}"
+                                        , getClass().getName(), rowInt, columnInt,stringCellFirstValue,stringCellSecondValue);*//*
                                 if(stringCellFirstValue.equals("")) continue;
                                 workPlan = factoryWorkPlan(Month.JANUARY, stringCellFirstValue, stringCellSecondValue, workPlan);
-                                /*log.info("Class {}, setWorkPlanSetFromFileTwoRow, if(columnTitleJanuary.equals(columnInt)), workPlan: {}"
-                                        , getClass().getName(), workPlan);*/
+                                *//*log.info("Class {}, setWorkPlanSetFromFileTwoRow, if(columnTitleJanuary.equals(columnInt)), workPlan: {}"
+                                        , getClass().getName(), workPlan);*//*
                             }else if(columnTitleFebruary.equals(columnInt)){
                                 if(stringCellFirstValue.equals("")) continue;
                                 workPlan = factoryWorkPlan(Month.FEBRUARY, stringCellFirstValue, stringCellSecondValue, workPlan);
@@ -396,7 +512,11 @@ public class WorkPlanFileToDataBase {
                                 if(stringCellFirstValue.equals("")) continue;
                                 workPlan = factoryWorkPlan(Month.DECEMBER, stringCellFirstValue, stringCellSecondValue, workPlan);
                             }else if(columnDateVMI.equals(columnInt)){
-                                if(!stringCellFirstValue.equals("") && DateUtil.isCellDateFormatted(firstCell)){
+                                log.info("Class {}, setWorkPlanSetFromFileTwoRow, stringCellFirstValue: {}, !stringCellFirstValue.equals(): {}, " +
+                                                "firstCell.getCellType(): {}, firstCell.getLocalDateTimeCellValue() {}"
+                                        , getClass().getName(), stringCellFirstValue, !stringCellFirstValue.equals(""), firstCell.getCellType(), firstCell.getLocalDateTimeCellValue());
+                                if(!stringCellFirstValue.equals("") && firstCell.getCellType().equals(CellType.NUMERIC)){
+                                    log.info("Class {}, setWorkPlanSetFromFileTwoRow, if(!stringCellFirstValue.equals() && DateUtil.isCellDateFormatted(firstCell))" , getClass().getName());
                                     //equipmentWithAttributes.setDateVMI(FactoryFormatterLocalDateTime.parseStringFormatDDMMYYYY(stringCellFirstValue));
                                     equipmentWithAttributes.setDateVMI(firstCell.getLocalDateTimeCellValue());
                                 }
@@ -412,11 +532,45 @@ public class WorkPlanFileToDataBase {
                                 }
                             }
                             if(null != equipmentWithAttributes.getEquipment() && null != workPlan.getTypeService()){
-                                /*log.info("Class {}, setWorkPlanSetFromFileTwoRow, if(null != equipmentWithAttributes.getEquipment() && null != workPlan.getTypeService())" +
+                                *//*log.info("Class {}, setWorkPlanSetFromFileTwoRow, if(null != equipmentWithAttributes.getEquipment() && null != workPlan.getTypeService())" +
                                                 ", workPlan: {}"
-                                        , getClass().getName(), workPlan);*/
-                                workPlan.setEquipmentWithAttributes(equipmentWithAttributes);
-                                workPlanSet.add(workPlan);
+                                        , getClass().getName(), workPlan);*//*
+                                List<EquipmentWithAttributes> ewaListFromRepository = ewaRepository
+                                        .findEquipmentWithAttributesByEquipment_TitleAndSerialNumber(equipmentWithAttributes.getEquipment().getTitle()
+                                                , equipmentWithAttributes.getSerialNumber());
+                                EquipmentWithAttributes ewaFromRepository = new EquipmentWithAttributes();
+                                if(null == ewaListFromRepository){
+                                    log.info("Class {}, setWorkPlanSetFromFileTwoRow, if(null == ewaListFromRepository), equipmentWithAttributes: {}"
+                                            , getClass().getName(), equipmentWithAttributes);
+                                    ewaFromRepository = ewaRepository.saveAndFlush(equipmentWithAttributes);
+                                    log.info("Class {}, setWorkPlanSetFromFileTwoRow, if(null == ewaListFromRepository)" +
+                                                    ", ewaFromRepository: {}"
+                                            , getClass().getName(), ewaFromRepository);
+                                }else if (ewaListFromRepository.size() == 0){
+                                    log.info("Class {}, setWorkPlanSetFromFileTwoRow, if (ewaListFromRepository.size() == 0)" +
+                                                    ", equipmentWithAttributes: {}"
+                                            , getClass().getName(), equipmentWithAttributes);
+                                    ewaFromRepository = ewaRepository.saveAndFlush(equipmentWithAttributes);
+                                    log.info("Class {}, setWorkPlanSetFromFileTwoRow, if(null == ewaListFromRepository)" +
+                                                    ", ewaFromRepository: {}"
+                                            , getClass().getName(), ewaFromRepository);
+                                }else if (ewaListFromRepository.size() == 1){
+                                    ewaFromRepository = ewaListFromRepository.get(0);
+                                }else if (ewaListFromRepository.size() > 1){
+                                    log.info("Class {}, setWorkPlanSetFromFileTwoRow, if (ewaListFromRepository.size() > 1)" +
+                                                    ", ewaListFromRepository.size(): {}"
+                                            , getClass().getName(), ewaListFromRepository.size());
+                                    List<EquipmentWithAttributes> ewaListFromRepositoryFindByPosition
+                                            = ewaRepository.findEquipmentWithAttributesByEquipment_TitleAndSerialNumberAndPosition
+                                            (equipmentWithAttributes.getEquipment().getTitle(), equipmentWithAttributes.getSerialNumber(), equipmentWithAttributes.getPosition());
+                                    if(ewaListFromRepositoryFindByPosition.size()==1){
+                                        ewaFromRepository = ewaListFromRepositoryFindByPosition.get(0);
+                                    }else {
+                                        this.setHasErrorAndErrorList(errorEwaRepositoryGet);//Do a test in the future
+                                    }
+                                }
+                                workPlan.setEquipmentWithAttributes(ewaFromRepository);
+                                this.workPlan.add(workPlan);
                             }
                         }
 
@@ -431,22 +585,26 @@ public class WorkPlanFileToDataBase {
         } catch (IOException e) {
             log.info("Class {}, setEquipmentsFromFile Exception {}", getClass().getName(),e.toString());
             this.setHasErrorAndErrorList(String.format("Class %s, setEquipmentsFromFile Exception %s", getClass().getName(), e));//Do a test in the future
-        }
-        return workPlanSet;
+        }*/
     }
 
-    private String getStringInMethodSetWorkPlan(Cell cell, String stringCellValue) {
+    private String getStringFromCellInMethodSetWorkPlan(Cell cell, String stringCellValue) {
         if (null != cell) {
             if(cell.getCellType().equals(CellType.STRING)){
                 stringCellValue = cell.getStringCellValue();
-            }/* else if (DateUtil.isCellDateFormatted(cell)){
-                stringCellValue = cell.getLocalDateTimeCellValue();
-            }*/else if (cell.getCellType().equals(CellType.NUMERIC) && !DateUtil.isCellDateFormatted(cell)){
+            } else if (cell.getCellType().equals(CellType.NUMERIC) && DateUtil.isCellDateFormatted(cell)){
+                stringCellValue = cell.getLocalDateTimeCellValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            }else if (cell.getCellType().equals(CellType.NUMERIC) && !DateUtil.isCellDateFormatted(cell)){
                 cell.setCellType(CellType.STRING);
                 stringCellValue = cell.toString();
             }
         }
         return stringCellValue;
+    }
+
+    private String getStringFromCellInMethodSetWorkPlan(Cell cell) {
+        String stringCellValue = "";
+        return getStringFromCellInMethodSetWorkPlan(cell, stringCellValue);
     }
 
     private Cell createCellIfNullInMethodSetWorkPlan(Row row, int columnInt){
@@ -458,11 +616,11 @@ public class WorkPlanFileToDataBase {
         return cell;
     }
 
-    public Set<WorkPlan> getWorkPlanSet(){
+    public List<WorkPlan> getWorkPlans(){
         this.setWorkPlanSetFromFileTwoRow();
         //log.info("Class {}, getWorkPlanSet, this.workPlanSet: {}", getClass().getName(),this.workPlanSet);
         if (!hasError()){
-            return this.workPlanSet;
+            return this.workPlans;
         } else {
             throw new WorkPlanFileToDataBaseException(errorList);
         }
@@ -528,6 +686,11 @@ public class WorkPlanFileToDataBase {
         }
         return workPlan;
     }
+
+    private boolean isNullEmpty(String value){
+        return null !=value && !value.equals("");
+    }
+
 }
 
 
