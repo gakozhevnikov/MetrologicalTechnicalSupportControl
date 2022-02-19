@@ -2,6 +2,7 @@ package com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces;
 
 
 import com.kga.metrologicaltechnicalsupportcontrol.model.maintenance.TypeService;
+import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.maintenance.TypeServiceRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

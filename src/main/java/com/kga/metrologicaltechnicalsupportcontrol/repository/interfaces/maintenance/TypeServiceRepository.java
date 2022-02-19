@@ -1,4 +1,4 @@
-package com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces;
+package com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.maintenance;
 
 import com.kga.metrologicaltechnicalsupportcontrol.model.maintenance.MaintenanceOperations;
 import com.kga.metrologicaltechnicalsupportcontrol.model.maintenance.TypeService;

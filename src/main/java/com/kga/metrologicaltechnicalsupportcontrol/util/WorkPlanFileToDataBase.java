@@ -6,6 +6,7 @@ import com.kga.metrologicaltechnicalsupportcontrol.exceptions.WorkPlanFileToData
 import com.kga.metrologicaltechnicalsupportcontrol.model.*;
 import com.kga.metrologicaltechnicalsupportcontrol.model.maintenance.TypeService;
 import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.*;
+import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.maintenance.TypeServiceRepository;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.poi.ss.usermodel.*;

@@ -4,7 +4,7 @@ import com.kga.metrologicaltechnicalsupportcontrol.exceptions.WorkPlanFileToData
 import com.kga.metrologicaltechnicalsupportcontrol.model.Equipment;
 import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
 import com.kga.metrologicaltechnicalsupportcontrol.model.WorkPlan;
-import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.TypeServiceRepository;
+import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.maintenance.TypeServiceRepository;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
