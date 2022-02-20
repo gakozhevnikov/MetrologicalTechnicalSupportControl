@@ -19,15 +19,13 @@ import java.util.List;
 @Getter
 @Setter
 @Data
-public class TypeServiceImpl implements FindByDesignation<TypeService, Long>, FindByMaintenanceOperation<TypeService, Long> {
+public class TypeServiceImplService implements FindByDesignation<TypeService, Long>, FindByMaintenanceOperation<TypeService, Long> {
 
     private final TypeServiceRepository typeServiceRepository;
-    private final WorkPlanFileToDataBase workPlanFileToDataBase;
 
     @Autowired
-    public TypeServiceImpl(TypeServiceRepository typeServiceRepository, WorkPlanFileToDataBase workPlanFileToDataBase) {
+    public TypeServiceImplService(TypeServiceRepository typeServiceRepository) {
         this.typeServiceRepository = typeServiceRepository;
-        this.workPlanFileToDataBase = workPlanFileToDataBase;
     }
 
     @Override
