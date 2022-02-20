@@ -7,6 +7,7 @@ import com.kga.metrologicaltechnicalsupportcontrol.model.*;
 import com.kga.metrologicaltechnicalsupportcontrol.model.maintenance.TypeService;
 import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.*;
 import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.maintenance.TypeServiceRepository;
+import com.kga.metrologicaltechnicalsupportcontrol.services.impl.maintenance.TypeServiceImplService;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.poi.ss.usermodel.*;
@@ -132,6 +133,8 @@ public class WorkPlanFileToDataBase {
     TypeServiceRepository typeServiceRepository;
     @Autowired
     EquipmentWithAttributesRepository ewaRepository;
+    @Autowired
+    TypeServiceImplService typeServiceImplService;
 
 
     public WorkPlanFileToDataBase() {
@@ -376,11 +379,11 @@ public class WorkPlanFileToDataBase {
                             String typeServiceFromCell = getStringFromCellInMethodSetWorkPlan(rowFirst.getCell(monthColumn.getValue()));
                             String DateOfWorkFromCell = getStringFromCellInMethodSetWorkPlan(rowSecond.getCell(monthColumn.getValue()));
                             if (isNullEmpty (typeServiceFromCell)) {
-                                TypeService typeService = typeServiceRepository.findTypeServiceByDesignation(typeServiceFromCell);
+                                TypeService typeService = typeServiceImplService.findByDesignation(typeServiceFromCell);
                                 if(null == typeService){
                                     typeService= new TypeService();
                                     typeService.setDesignation(typeServiceFromCell);
-                                    typeService = typeServiceRepository.saveAndFlush(typeService);
+                                    typeService = typeServiceImplService.save(typeService);
                                 }
                                 WorkPlan workPlan = new WorkPlan();
                                 workPlan.setEquipmentWithAttributes(ewaFromRepository);
@@ -673,11 +676,11 @@ public class WorkPlanFileToDataBase {
 
     public WorkPlan factoryWorkPlan(Month month, String stringCellFirstValue, String stringCellSecondValue, WorkPlan workPlan){
         workPlan.setMonth(month);
-        TypeService typeService = typeServiceRepository.findTypeServiceByDesignation(stringCellFirstValue);
+        TypeService typeService = typeServiceImplService.findByDesignation(stringCellFirstValue);
         if(null == typeService){
             typeService= new TypeService();
             typeService.setDesignation(stringCellFirstValue);
-            typeService = typeServiceRepository.saveAndFlush(typeService);
+            typeService = typeServiceImplService.save(typeService);
         }
         workPlan.setTypeService(typeService);
         if (!stringCellFirstValue.equals("") && !stringCellSecondValue.equals("")){
