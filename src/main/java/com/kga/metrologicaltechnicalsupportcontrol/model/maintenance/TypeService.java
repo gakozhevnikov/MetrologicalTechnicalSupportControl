@@ -18,7 +18,7 @@ public class TypeService implements HasId, Comparable<TypeService> {
     private Long id;
 
     /**Наименование, обозначение, символ обслуживания*/
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String designation;
 
     /**Для создания связи между видом обслуживания и операциями обслуживания*/
