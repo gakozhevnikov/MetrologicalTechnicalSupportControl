@@ -66,8 +66,8 @@ public class EquipmentServiceImpl implements SecondTypeParameter<Equipment, Long
     }
 
     @Override
-    public Equipment getById(Long id) {
-        log.info("Class {}, method getById, value Id of equipments: {}",getClass().getName(), id);
+    public Equipment findById(Long id) {//используй findById, getById вызывает ошибку
+        log.info("Class {}, method findById, value Id of equipments: {}",getClass().getName(), id);
         Optional<Equipment> optionalEquipment = equipmentRepository.findById(id);//Do not use .getById, need .findById
         return optionalEquipment.orElse(null);//refactor with new throw
     }

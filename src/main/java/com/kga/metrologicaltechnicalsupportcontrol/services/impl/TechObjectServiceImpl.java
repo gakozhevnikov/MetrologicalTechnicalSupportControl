@@ -72,8 +72,8 @@ public class TechObjectServiceImpl implements SecondTypeParameter<TechObject, Lo
     }
 
     @Override
-    public TechObject getById(Long id) {
-        log.info("Class {}, method getById, ", getClass().getName());
+    public TechObject findById(Long id) {//используй findById, getById вызывает ошибку
+        log.info("Class {}, method findById, ", getClass().getName());
         Optional<TechObject> optionalTechObject = techObjectRepository.findById(id);
         return optionalTechObject.orElse(null);
     }

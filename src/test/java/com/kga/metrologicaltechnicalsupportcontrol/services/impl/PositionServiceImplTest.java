@@ -4,7 +4,6 @@ import com.kga.metrologicaltechnicalsupportcontrol.model.Position;
 import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
 import com.kga.metrologicaltechnicalsupportcontrol.util.FileManager;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -165,7 +164,7 @@ public class PositionServiceImplTest {
         String titleAfterGetById = positionAfterSaveAllAndFlush.getTitle();//Если есть два одинаковых titla то будет ошибка т.к. возвращатся два а не один
         Long idPositionAfterSaveAll = positionAfterSaveAllAndFlush.getId();
         log.info("Class {}, method shouldGetById, positionAfterSaveAllAndFlush: {}", getClass().getName(), positionAfterSaveAllAndFlush);
-        Position positionAfterGetById = positionService.getById(idPositionAfterSaveAll);
+        Position positionAfterGetById = positionService.findById(idPositionAfterSaveAll);
         String titleAfterGEtById = positionAfterGetById.getTitle();
         log.info("Class {}, method shouldGetById, positionAfterGetById: {}", getClass().getName(), positionAfterGetById);
         assertThat(titleAfterGetById.equals(titleAfterGEtById), is(true));

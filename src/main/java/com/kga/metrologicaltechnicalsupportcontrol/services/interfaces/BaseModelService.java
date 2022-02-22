@@ -15,6 +15,6 @@ public interface BaseModelService<T, ID> {
 
     List<T> findAll();
 
-    T getById(Long id);
+    T findById(Long id);
 
 }

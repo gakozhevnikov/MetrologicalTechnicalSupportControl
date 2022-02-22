@@ -94,8 +94,8 @@ public class PositionServiceImpl implements SecondTypeParameterReturnSetFindByOb
     }
 
     @Override
-    public Position getById(Long id) {
-        log.info("Class {}, method getById, value id: {}",getClass().getName(), id);
+    public Position findById(Long id) {//используй findById, getById вызывает ошибку
+        log.info("Class {}, method findById, value id: {}",getClass().getName(), id);
         Optional<Position> positionOptional = positionRepository.findById(id);
         return positionOptional.orElse(null);
     }

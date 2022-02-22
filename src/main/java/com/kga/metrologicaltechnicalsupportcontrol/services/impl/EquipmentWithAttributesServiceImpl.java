@@ -70,8 +70,8 @@ public class EquipmentWithAttributesServiceImpl implements BaseModelService<Equi
     }
 
     @Override
-    public EquipmentWithAttributes getById(Long id) {
-        log.info("Class {}, method getById, value id: {}",getClass().getName(), id);
+    public EquipmentWithAttributes findById(Long id) {//используй findById, getById вызывает ошибку
+        log.info("Class {}, method findById, value id: {}",getClass().getName(), id);
         Optional<EquipmentWithAttributes> optional = equWithAttrRepository.findById(id);
         return optional.orElse(null);
     }

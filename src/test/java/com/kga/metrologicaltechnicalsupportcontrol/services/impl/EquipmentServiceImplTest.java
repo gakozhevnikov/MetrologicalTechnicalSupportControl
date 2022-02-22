@@ -1,7 +1,6 @@
 package com.kga.metrologicaltechnicalsupportcontrol.services.impl;
 
 import com.kga.metrologicaltechnicalsupportcontrol.model.Equipment;
-import com.kga.metrologicaltechnicalsupportcontrol.model.TechObject;
 import com.kga.metrologicaltechnicalsupportcontrol.util.FileManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -125,7 +124,7 @@ public class EquipmentServiceImplTest {
                 getClass().getName(), findAllList);
         Equipment equipment = testListEquipment.get(0);
         Long id = equipment.getId();
-        Equipment equipmentGetId = equipmentService.getById(id);
+        Equipment equipmentGetId = equipmentService.findById(id);
         log.info("Class {}, method getById, " +
                         "equipmentGetId: {}, " +
                         "equipment: {}, "+

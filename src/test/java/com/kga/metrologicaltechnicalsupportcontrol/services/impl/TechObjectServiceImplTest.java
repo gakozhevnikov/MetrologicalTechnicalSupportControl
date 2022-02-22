@@ -116,7 +116,7 @@ class TechObjectServiceImplTest {
         List<TechObject> findAllList = techObjectService.findAll();
         TechObject techObject = testListTechObject.get(0);
         Long id = techObject.getId();
-        TechObject techObjectGetId =techObjectService.getById(techObject.getId());
+        TechObject techObjectGetId =techObjectService.findById(techObject.getId());
         log.info("Class {}, method getById, " +
                         "techObjectGetId: {}, " +
                         "techObject: {}, "+
