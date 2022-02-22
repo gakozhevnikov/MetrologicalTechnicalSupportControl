@@ -1,5 +1,6 @@
 package com.kga.metrologicaltechnicalsupportcontrol.services.impl.maintenance;
 
+import com.kga.metrologicaltechnicalsupportcontrol.model.EquipmentWithAttributes;
 import com.kga.metrologicaltechnicalsupportcontrol.model.maintenance.MaintenanceOperations;
 import com.kga.metrologicaltechnicalsupportcontrol.model.maintenance.TypeService;
 import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.maintenance.TypeServiceRepository;
@@ -14,12 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Getter
 @Setter
 @Data
-public class TypeServiceImplService implements FindByDesignation<TypeService, Long>, FindByMaintenanceOperation<TypeService, Long> {
+public class TypeServiceImplService implements FindByDesignation<TypeService, Long>{
 
     private final TypeServiceRepository typeServiceRepository;
 
@@ -54,17 +56,13 @@ public class TypeServiceImplService implements FindByDesignation<TypeService, Lo
     }
 
     @Override
-    public TypeService getById(Long id) {
-        return typeServiceRepository.getById(id);
+    public TypeService findById(Long id) {
+        Optional<TypeService> optional = typeServiceRepository.findById(id);
+        return optional.orElse(null);
     }
 
     @Override
     public TypeService findByDesignation(String designation) {
         return typeServiceRepository.findTypeServiceByDesignation(designation);
-    }
-
-    @Override
-    public List<TypeService> findByMaintenanceOperation(MaintenanceOperations maintenanceOperations) {
-        return typeServiceRepository.findTypeServiceByMaintenanceOperations(maintenanceOperations);
     }
 }

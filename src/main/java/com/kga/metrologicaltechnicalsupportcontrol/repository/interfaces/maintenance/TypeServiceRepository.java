@@ -10,5 +10,4 @@ import java.util.List;
 @Repository
 public interface TypeServiceRepository extends JpaRepository<TypeService, Long> {
     TypeService findTypeServiceByDesignation(String designation);
-    List<TypeService> findTypeServiceByMaintenanceOperations(MaintenanceOperations maintenanceOperations);
 }
