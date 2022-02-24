@@ -1,8 +1,6 @@
 package com.kga.metrologicaltechnicalsupportcontrol.services.impl;
 
-import com.kga.metrologicaltechnicalsupportcontrol.model.maintenance.MaintenanceOperations;
 import com.kga.metrologicaltechnicalsupportcontrol.model.maintenance.TypeService;
-import com.kga.metrologicaltechnicalsupportcontrol.repository.interfaces.maintenance.MaintenanceOperationsRepository;
 import com.kga.metrologicaltechnicalsupportcontrol.services.impl.maintenance.TypeServiceImplService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +24,6 @@ public class TypeServiceImplServiceTest {
 
     @Autowired
     TypeServiceImplService typeServiceImplService;
-    @Autowired
-    MaintenanceOperationsRepository maintOperRepository;
 
     String typeServiceDesignationFirst = "Test Type Service Designation First";
     String typeServiceDesignationSecond = "Test Type Service Designation Second";
