@@ -10,5 +10,4 @@ import java.util.List;
 @Repository
 public interface PurposeOperationsRepository extends JpaRepository<PurposeOperations, Long> {
     PurposeOperations findPurposeOperationsByDesignation(String designation);
-    List<PurposeOperations> findPurposeOperationsByMaintenanceOperations (MaintenanceOperations maintenanceOperations);
 }
