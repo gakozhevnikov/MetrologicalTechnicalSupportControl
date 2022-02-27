@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @ToString
 @Entity
-public class MaintenanceOperations implements HasId {
+public class MaintenanceOperations implements HasId, Comparable<MaintenanceOperations> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,4 +45,8 @@ public class MaintenanceOperations implements HasId {
     @ManyToMany( mappedBy = "maintenanceOperations")
     private List<Equipment> equipment;
 
+    @Override
+    public int compareTo(MaintenanceOperations mo) {
+        return this.sequence.compareTo(mo.sequence);
+    }
 }
