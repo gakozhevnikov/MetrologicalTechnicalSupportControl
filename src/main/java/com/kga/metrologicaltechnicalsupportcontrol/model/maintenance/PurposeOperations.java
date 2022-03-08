@@ -1,5 +1,6 @@
 package com.kga.metrologicaltechnicalsupportcontrol.model.maintenance;
 
+import com.kga.metrologicaltechnicalsupportcontrol.HasId;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,7 @@ import java.util.List;
 @Setter
 @ToString
 @Entity
-public class PurposeOperations {
+public class PurposeOperations implements HasId {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
